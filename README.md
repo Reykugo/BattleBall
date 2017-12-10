@@ -1,6 +1,6 @@
-==Battle Ball Project
+##Battle Ball Project
 
-===Notes
+###Notes
 
 To run the battleball project under unity, and use a mobile controller, you'll need to open port 8080 in your firewall for in and out request with UDP protocol.
 

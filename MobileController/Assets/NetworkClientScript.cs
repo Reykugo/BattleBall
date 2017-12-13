@@ -38,12 +38,12 @@ namespace Network
             networkDiscoveryManager = GetComponent<ClientNetworkDiscovery>();
             myReiliableChannelId = connecConfig.AddChannel(QosType.Reliable);
             myUnreliableChannelId = connecConfig.AddChannel(QosType.Unreliable);
-            
+
             topology = new HostTopology(connecConfig, 2);
 
             /// Init
             NetworkTransport.Init(GConfig);
-            hostId = NetworkTransport.AddHost(topology, 8888);
+            hostId = NetworkTransport.AddHost(topology, 8081);
 
             networkDiscoveryManager.OnHostDiscovered += OnReceivedBroadcast;
         }

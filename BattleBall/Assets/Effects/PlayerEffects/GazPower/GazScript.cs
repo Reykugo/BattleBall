@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BombEffect : MonoBehaviour {
+public class GazScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

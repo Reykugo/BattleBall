@@ -14,7 +14,7 @@ public class MovingScript : MonoBehaviour {
     {
         rigidbody = this.GetComponent<Rigidbody>();
         rigidbody.freezeRotation = true;
-        rigidbody.useGravity = false;
+        rigidbody.useGravity = true;
     }
     // Use this for initialization
     void Start () {

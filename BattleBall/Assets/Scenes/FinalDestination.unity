@@ -190,7 +190,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &409232781
 GameObject:
@@ -286,6 +286,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1439598584 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1767510137020296, guid: e06bbd70cd4289343800f604d288856c,
+    type: 2}
+  m_PrefabInternal: {fileID: 1439625174}
+--- !u!114 &1439598585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1439598584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25055d9a6e451ca4ea1a8e36c3ff5d40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxChargePower: 100
+  ChargePerSecond: 25
 --- !u!1001 &1439625174
 Prefab:
   m_ObjectHideFlags: 0
@@ -341,7 +359,7 @@ GameObject:
   - component: {fileID: 1638718163}
   m_Layer: 0
   m_Name: Floor
-  m_TagString: Untagged
+  m_TagString: Field
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

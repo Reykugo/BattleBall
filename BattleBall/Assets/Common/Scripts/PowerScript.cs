@@ -2,15 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GazScript : MonoBehaviour {
+public class PowerScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
+		
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
 	}
+
+    public void AssignToPlayer(GameObject player)
+    {
+        GetComponent<FollowPositionScript>().ObjectToFollow = player.transform;
+    }
 }

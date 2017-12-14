@@ -16,6 +16,9 @@ public class GameSelectionUI : FlowStep {
     private GamesContainer container;
     private GameStateManager gameStateManager;
 
+    public string testIP = "10.92.2.204";
+    public string TestRoomName = "Testing";
+
 	// Use this for initialization
 
     void Awake()
@@ -25,7 +28,8 @@ public class GameSelectionUI : FlowStep {
         container = GetComponentInChildren<GamesContainer>();
     }
 	void Start () {
-	}
+        AddHost("::ffff:"+testIP, TestRoomName);
+    }
 	
 	// Update is called once per frame
 	void Update () {

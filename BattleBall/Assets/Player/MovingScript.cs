@@ -10,6 +10,10 @@ public class MovingScript : MonoBehaviour
 
     public bool isGrounded = false;
 
+    public Vector3 currentDirection;
+
+    public float maxVelocity;
+
 
 
     void Start()
@@ -25,7 +29,13 @@ public class MovingScript : MonoBehaviour
             float moveVertical = Input.GetAxis("Vertical");
 
             Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
-            rb.AddForce(movement * speed);
+
+            currentDirection = movement.normalized;
+            if(rb.velocity.magnitude < maxVelocity)
+            {
+                rb.AddForce(movement * speed, ForceMode.VelocityChange);
+            }
+                
         }
        
     }

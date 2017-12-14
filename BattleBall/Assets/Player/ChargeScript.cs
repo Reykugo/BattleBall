@@ -51,15 +51,23 @@ public class ChargeScript : MonoBehaviour
             if (chargePower <= MaxChargePower)
             {
                 chargePower += ChargePerSecond / 4;
-                yield return new WaitForSeconds(0.15f);
             }
+            yield return new WaitForSeconds(0.15f);
+
+        }
+        Vector3 normalizedVelocity = GetComponent<MovingScript>().currentDirection;
+        /*Vector3 normalizedVelocity = rb.velocity.normalized;*/
+
+        rb.AddForce(normalizedVelocity * chargePower, ForceMode.Impulse);
+        yield return new WaitForSeconds(0.5f);
+        while(rb.velocity.magnitude > GetComponent<MovingScript>().maxVelocity)
+        {
+            rb.velocity -= normalizedVelocity;
+            yield return new WaitForEndOfFrame();
 
         }
 
-        Vector3 normalizedVelocity = rb.velocity.normalized;
-        rb.AddForce(normalizedVelocity * chargePower, ForceMode.Impulse);
-        yield return new WaitForSeconds(0.5f);
-        rb.velocity = normalizedVelocity;
+        
         isOnCharge = false;
     }
 }

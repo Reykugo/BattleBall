@@ -26,7 +26,7 @@ public class WaitingScript : MonoBehaviour {
     IEnumerator dotWaitingCoroutine()
     {
         int timer = 0;
-        while (true)
+        while (enabled)
         {
             t.text = textBase;
             for (int i = 0; i < timer; i++)

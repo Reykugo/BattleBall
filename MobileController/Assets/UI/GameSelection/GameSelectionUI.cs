@@ -28,7 +28,6 @@ public class GameSelectionUI : FlowStep {
         container = GetComponentInChildren<GamesContainer>();
     }
 	void Start () {
-        AddHost("::ffff:"+testIP, TestRoomName);
     }
 	
 	// Update is called once per frame
@@ -47,7 +46,7 @@ public class GameSelectionUI : FlowStep {
         {
             ipV4 = matches[0].Groups[1].Value;
         }
-        string[] hostInfos = data.Split(":".ToCharArray());
+        string[] hostInfos = data.Split(";".ToCharArray());
         container.Add(hostInfos[0], ipV4, (hostInfos.Length == 2) ? hostInfos[1] : "N/A");
     }
 
@@ -56,6 +55,8 @@ public class GameSelectionUI : FlowStep {
         WaitingPopUp.SetActive(true);
         net.OnConnect += gameStateManager.TransitToLobby;
         clientDiscovery.OnHostDiscovered += AddHost;
+        AddHost("::ffff:" + testIP, TestRoomName);
+
     }
     void OnDisable()
     {

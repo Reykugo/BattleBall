@@ -6,23 +6,19 @@ using UnityEngine.Networking;
 
 public class PlayerConnexionScript : MonoBehaviour {
     const string ALIVE_COMMAND = "Alive";
+    const string PLAYER_UPDATE = "PlayerUpdate";
     //PlayerData represent the player states, score, a lot of things. 
-    public struct PlayerData//TODO make a class REFACTOR;
+    public struct ConnectionData//TODO make a class REFACTOR;
     {
         public int connexionId;
         public int hostId;
         public string ipAddress;
         public int port;
-
-        public string playerName;
-        public Color color;
-
-        public bool ready;
     }
 
     public delegate void NetMessageObserver(string buffer);
     public NetMessageObserver OnMessageReceived;
-    public PlayerData playerData;
+    public ConnectionData clientData;
     public NetworkScript net;
 
     private byte[] receivedBuff = new byte[1024];
@@ -40,7 +36,7 @@ public class PlayerConnexionScript : MonoBehaviour {
         byte error;
         receivedBuff.Initialize();
         int receivedSize;
-        NetworkEventType ev= NetworkTransport.ReceiveFromHost(playerData.hostId, out connectionId, out channelId, receivedBuff, 1024, out receivedSize, out error);
+        NetworkEventType ev= NetworkTransport.ReceiveFromHost(clientData.hostId, out connectionId, out channelId, receivedBuff, 1024, out receivedSize, out error);
         switch (ev)
         {
             case NetworkEventType.DataEvent:
@@ -62,11 +58,11 @@ public class PlayerConnexionScript : MonoBehaviour {
             if(disconnectTimer > 5.0f)// 5.0 seconds.
             {
                 Debug.Log("Disconnect no alive in " + disconnectTimer);
-                NetworkTransport.Disconnect(playerData.hostId, playerData.connexionId, out error);
+                NetworkTransport.Disconnect(clientData.hostId, clientData.connexionId, out error);
                 //OnDisconnect;
                 //
                 connected = false;
-                net.Disconnect(playerData.connexionId);
+                net.Disconnect(clientData.connexionId);
             }
         }
 
@@ -74,21 +70,29 @@ public class PlayerConnexionScript : MonoBehaviour {
 
     private void OnDataReceived(string data)
     {
-        Debug.Log(data);
         var command = data.Split(";".ToCharArray());
-        Debug.Log(command[0]);
-        Debug.Log(command[0].Length + " / " + ALIVE_COMMAND.Length);
         if (command[0] == ALIVE_COMMAND)
         {
             Debug.Log("Alive : " + disconnectTimer);
             disconnectTimer = 0f;
             return;
-        }else
-        {
-            Debug.LogWarning("Not Alive");
         }
 
         if (OnMessageReceived != null)
             OnMessageReceived(data);
+    }
+
+    public void SendColorUpdate(Color color)
+    {
+        string colorCommand = PLAYER_UPDATE + ";" + Encoding.ASCII.GetString(NetworkScript.ColorToByte(color));
+        Debug.Log(colorCommand);
+        Send(colorCommand);
+    }
+    private void Send(string message)
+    {
+        byte error;
+        byte[] buffer = Encoding.ASCII.GetBytes(message);
+        NetworkTransport.Send(clientData.hostId, clientData.connexionId, channelId, buffer, buffer.Length, out error);
+        //Check error;
     }
 }

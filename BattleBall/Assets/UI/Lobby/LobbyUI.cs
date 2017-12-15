@@ -6,72 +6,48 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class LobbyUI : MonoBehaviour {
-
-    public NetworkScript net;
-    public GameObject playerNet;
+    public Lobby lobby;
     public List<GameObject> playersUI;
-
-    private bool ready = false;
-
-    private Dictionary<int, GameObject> players = new Dictionary<int, GameObject>(); // Empty go that will instantiate balls and containData.
 	// Use this for initialization
 	void Start () {
         
-        net.OnConnect += OnPlayerEnter;
-        net.OnDisconnect += OnPlayerExit;
-        //net.OnMessageReceived += ParseMessage;
+        lobby.OnPlayerEnter += SetPlayerLayout;
+        lobby.OnPlayerLeave += SetWaitingLayout;
+        lobby.OnPlayerReady += SetReadyLayout;
 	}
-	
-    void OnPlayerEnter(int connectionId)
+
+    void SetPlayerLayout(Lobby.PlayerData playerData, int playerCount)
     {
-        GameObject go = net.GetPlayer(connectionId);
-        Debug.Log("PlayerEntered");
-        if (!players.ContainsKey(connectionId) && go)
+        var image = playersUI[(int)playerData.playerEnum].GetComponentInChildren<Image>();
+        image.color = playerData.playerColor;
+        image.transform.GetComponent<RectTransform>().localPosition = new Vector3(0f, 200 - 100 * ((int)playerData.playerEnum), 0f);
+        playersUI[(int)playerData.playerEnum].GetComponentInChildren<WaitingScript>().enabled = false;
+        playersUI[(int)playerData.playerEnum].GetComponentInChildren<Text>().text = playerData.playerName + " - " + playerData.connection.ipAddress;
+    }
+
+    void SetReadyLayout(Lobby.PlayerData playerData)
+    {
+        //Tmp change message
+        if (playerData.ready)
         {
-            players.Add(connectionId, go);
-            var tmp = go.GetComponent<PlayerConnexionScript>();
-            tmp.OnMessageReceived += (buffer) => { ParseMessage(connectionId, buffer); };
-            var image = playersUI[connectionId - 1].GetComponentInChildren<Image>();
-            image.color = tmp.playerData.color;
-            image.transform.GetComponent<RectTransform>().localPosition = new Vector3(0f, 200 - 100 * (connectionId-1), 0f);
-            playersUI[connectionId-1].GetComponentInChildren<Text>().text = tmp.playerData.playerName + " - " +  tmp.playerData.ipAddress;
-            
+            playersUI[(int)playerData.playerEnum].GetComponentInChildren<Text>().text = playerData.playerName + " - " + "Ready";
         }
-        else { Debug.Log("Error or reconnect " + connectionId); }
-    }
-
-    void OnPlayerExit(int connectionId)
-    {
-        if (players.ContainsKey(connectionId))
+        else
         {
-            var image = playersUI[connectionId - 1].GetComponentInChildren<Image>();
-            image.color = new Color(57f/255f,57f/255f,57f/255f);
-            image.transform.GetComponent<RectTransform>().localPosition = new Vector3(0f, 200 - 100 * (connectionId - 1), 0f);
-            playersUI[connectionId - 1].GetComponent<RectTransform>().localPosition = Vector3.zero;
-            playersUI[connectionId - 1].GetComponentInChildren<Text>().text = "....";
-            //
-            Destroy(players[connectionId]); //Destroy Gameobject is better;
-            players.Remove(connectionId);
+            playersUI[(int)playerData.playerEnum].GetComponentInChildren<Text>().text = playerData.playerName + " - " + playerData.connection.ipAddress;
         }
-        else { Debug.Log("Error or reconnect " + connectionId); }
+        //TODO Add Ready Icon;
     }
 
-    void ParseMessage(int connectionId, string buffer)
+    void SetWaitingLayout(Lobby.PlayerData playerData, int playerCount)
     {
-        string[] command = buffer.Split(";".ToCharArray());
-        if (command[0] == "Ready")
-        { 
-            if (players.ContainsKey(connectionId))
-            {
-                ready = !ready;
-                Debug.Log(ready);
-                playersUI[connectionId - 1].GetComponent<RectTransform>().Translate(new Vector3((ready)? 150f : -150f, 0f,0f));
-            }
-        }
+        var image = playersUI[(int)playerData.playerEnum].GetComponentInChildren<Image>();
+        image.color = new Color(57f / 255f, 57f / 255f, 57f / 255f);
+        image.transform.GetComponent<RectTransform>().localPosition = new Vector3(0f, 200 - 100 * ((int)playerData.playerEnum), 0f);
+        playersUI[(int)playerData.playerEnum].GetComponent<RectTransform>().localPosition = Vector3.zero;
+        playersUI[(int)playerData.playerEnum].GetComponentInChildren<WaitingScript>().enabled = true;
     }
 
-    void OnPlayerReady()
-    {
 
-    }
+
 }

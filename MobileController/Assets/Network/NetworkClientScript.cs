@@ -58,7 +58,7 @@ namespace Network
             myReiliableChannelId = connecConfig.AddChannel(QosType.Reliable);
             myUnreliableChannelId = connecConfig.AddChannel(QosType.Unreliable);
 
-            topology = new HostTopology(connecConfig, 2);
+            topology = new HostTopology(connecConfig, 1);
 
             /// Init
             NetworkTransport.Init(GConfig);
@@ -220,9 +220,13 @@ namespace Network
                 byte[] buffer = Encoding.ASCII.GetBytes("Alive");
                 if (!NetworkTransport.Send(remoteHostId, connectionId, remoteChannelId, buffer, buffer.Length, out error))
                 {
-                    Debug.Log("Error : " + (NetworkError)(error));//Handle disconnect.
-                    connected = false;
-                    break;
+                    var netErr = (NetworkError)(error);
+                    Debug.Log("Error : " + netErr);//Handle disconnect.
+                    if (netErr == NetworkError.WrongConnection)
+                    {
+                        connected = false;
+                        break;
+                    }
                 }
                 yield return new WaitForSeconds(0.5f);
             }

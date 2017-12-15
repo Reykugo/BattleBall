@@ -32,9 +32,9 @@ public class GamesContainer : MonoBehaviour {
         if (!gamesFound.ContainsKey(ip))
         {
             go = Instantiate(GameButton, transform);
+            gamesFound.Add(ip, go);
             var button = go.GetComponent<Button>();
             button.onClick.AddListener(() => { net.Connect(ip); });
-            gamesFound.Add(ip, go);
         }
         else
         {

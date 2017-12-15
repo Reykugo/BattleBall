@@ -12,7 +12,7 @@ public class NetworkScript : MonoBehaviour {
     public GlobalConfig GConfig = new GlobalConfig();
     public ConnectionConfig ConnectConfig = new ConnectionConfig();
 
-    public delegate void NetObserver(int connectionId);
+    public delegate void NetObserver(PlayerConnexionScript.ConnectionData connectionData);
     public delegate void ErrorNetObserver(NetworkError error);
     public delegate void MessageObserver(int connectionId, string data);
 
@@ -38,7 +38,7 @@ public class NetworkScript : MonoBehaviour {
         myUnreliableChannelId = ConnectConfig.AddChannel(QosType.Unreliable);
         NetworkTransport.Init(GConfig);
         topology = new HostTopology(ConnectConfig, 4);
-        int hostId = NetworkTransport.AddHost(topology, 8080);
+        hostId = NetworkTransport.AddHost(topology, 8080);
     }
 
     void Update()
@@ -60,7 +60,7 @@ public class NetworkScript : MonoBehaviour {
                 OnConnectReceived(hConnectionId, remoteHostId, channelId);
                 break;
             case NetworkEventType.DataEvent:
-                var data = Encoding.ASCII.GetString(recBuffer);
+                //var data = Encoding.ASCII.GetString(recBuffer);
                 //OnDataReceived(hConnectionId, remoteHostId, myReiliableChannelId, data);//3
                 break;
             case NetworkEventType.DisconnectEvent: //4
@@ -72,53 +72,35 @@ public class NetworkScript : MonoBehaviour {
 
     public void Disconnect(int connectionId)
     {
+        if(OnDisconnect != null)
+        {
+            OnDisconnect(clients[connectionId].GetComponent<PlayerConnexionScript>().clientData);
+        }
         Debug.Log(clients.Count);
         Destroy(clients[connectionId]);
         clients.Remove(connectionId);
-        if(OnDisconnect != null)
-        {
-            OnDisconnect(connectionId);
-        }
         Debug.Log(clients.Count);
     }
 
     void OnConnectReceived(int receivedConnectionId, int receivedHostId, int receivedChannelId)
     {//If party has not started.
-        PlayerConnexionScript.PlayerData playerData = new PlayerConnexionScript.PlayerData();
-        Color[] colors = { Color.red, Color.blue, Color.green, Color.yellow };
-        playerData.connexionId = receivedConnectionId;
-        playerData.hostId = receivedHostId;
+        PlayerConnexionScript.ConnectionData clientData = new PlayerConnexionScript.ConnectionData();
+        clientData.connexionId = receivedConnectionId;
+        clientData.hostId = receivedHostId;
         NetworkID networkId;
         NodeID dstNode;
         byte error;
-        Debug.Log("Connect Player");
-        NetworkTransport.GetConnectionInfo(receivedHostId, receivedConnectionId, out playerData.ipAddress, out playerData.port, out networkId, out dstNode, out error);
-        playerData.playerName = "J" + receivedConnectionId;
-        playerData.color = colors[receivedConnectionId-1];
+        NetworkTransport.GetConnectionInfo(receivedHostId, receivedConnectionId, out clientData.ipAddress, out clientData.port, out networkId, out dstNode, out error);
 
         var go = Instantiate(playerNetworkPrefab, transform);
         clients.Add(receivedConnectionId, go);
-        clients[receivedConnectionId].name = "player " + receivedConnectionId + " @"+playerData.ipAddress;
+        clients[receivedConnectionId].name = "player " + receivedConnectionId + " @"+ clientData.ipAddress;
         var s = clients[receivedConnectionId].GetComponent<PlayerConnexionScript>();
-        s.playerData = playerData;
+        s.clientData = clientData;
         s.net = this;
-
-        byte[] buffer = Encoding.ASCII.GetBytes("PlayerUpdate;");
-        byte[] color = ColorToByte(playerData.color);
-        byte[] final = new byte[buffer.Length + color.Length];
-        System.Buffer.BlockCopy(buffer, 0, final, 0, buffer.Length);
-        System.Buffer.BlockCopy(color, 0, final, buffer.Length, color.Length);
-        
-        if (!NetworkTransport.Send(receivedHostId, receivedConnectionId, receivedChannelId, final, final.Length, out error))
-        {
-            Debug.Log("Error");
-        }
-        else
-        {
-            if(OnConnect != null)
-                OnConnect(receivedConnectionId);
-            StartCoroutine(ListenToClient(receivedConnectionId, receivedHostId, playerData));
-        }
+        if(OnConnect != null)
+            OnConnect(clientData);
+        StartCoroutine(ListenToClient(receivedConnectionId, receivedHostId, clientData));
     }
 
     void OnDisconectReceived(int receivedConnectionId, int receivedHostId, int receivedChannelId)
@@ -127,7 +109,7 @@ public class NetworkScript : MonoBehaviour {
         Debug.Log(receivedConnectionId + " : " + receivedHostId);
     }
 
-    IEnumerator ListenToClient(int receivedConnectionId, int receivedHostId, PlayerConnexionScript.PlayerData client)
+    IEnumerator ListenToClient(int receivedConnectionId, int receivedHostId, PlayerConnexionScript.ConnectionData client)
     {
         bool connected = true;
         while (connected)

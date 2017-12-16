@@ -8,7 +8,7 @@ public class MovingScript : MonoBehaviour
 
     private Rigidbody rb;
 
-    public bool isGrounded = false;
+    public bool IsGrounded = false;
 
     public Vector3 currentDirection;
 
@@ -23,14 +23,19 @@ public class MovingScript : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (isGrounded)
+        if (IsGrounded)
         {
             float moveHorizontal = Input.GetAxis("Horizontal");
             float moveVertical = Input.GetAxis("Vertical");
 
             Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
 
-            currentDirection = movement.normalized;
+
+            if( movement != new Vector3(0, 0, 0))
+            {
+                currentDirection = movement.normalized;
+            }
+            
             if(rb.velocity.magnitude < maxVelocity)
             {
                 rb.AddForce(movement * speed, ForceMode.VelocityChange);

@@ -13,7 +13,7 @@ public class GroundCheckerScript : MonoBehaviour
     {
         if(other.tag == "Field")
         {
-            PlayerMove.isGrounded = true;
+            PlayerMove.IsGrounded = true;
         }
     }
 
@@ -21,7 +21,7 @@ public class GroundCheckerScript : MonoBehaviour
     {
         if (other.tag == "Field")
         {
-            PlayerMove.isGrounded = false;
+            PlayerMove.IsGrounded = false;
         }
     }
     // Use this for initialization

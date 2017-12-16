@@ -7,20 +7,19 @@ using System.Text;
 using System;
 
 
-public class NetworkScript : MonoBehaviour { 
+public class NetworkScript : MonoBehaviour {
+
 
     public GlobalConfig GConfig = new GlobalConfig();
     public ConnectionConfig ConnectConfig = new ConnectionConfig();
 
     public delegate void NetObserver(PlayerConnexionScript.ConnectionData connectionData);
     public delegate void ErrorNetObserver(NetworkError error);
-    public delegate void MessageObserver(int connectionId, string data);
 
     public event NetObserver OnConnect;
     public event ErrorNetObserver OnConnectTimeOut;
 
     public event NetObserver OnDisconnect;
-    public event MessageObserver OnMessageReceived;
 
     public GameObject playerNetworkPrefab;
     int hostId;
@@ -31,13 +30,19 @@ public class NetworkScript : MonoBehaviour {
     private HostTopology topology;
     private int myUnreliableChannelId;
     private int myReiliableChannelId;
+    private int myStateChannelId;
 
+    void OnDestroy()
+    {
+        NetworkTransport.Shutdown();
+    }
     // Use this for initialization
     void Start () { 
         myReiliableChannelId = ConnectConfig.AddChannel(QosType.Reliable);
         myUnreliableChannelId = ConnectConfig.AddChannel(QosType.Unreliable);
+        myStateChannelId = ConnectConfig.AddChannel(QosType.ReliableStateUpdate);
         NetworkTransport.Init(GConfig);
-        topology = new HostTopology(ConnectConfig, 4);
+        topology = new HostTopology(ConnectConfig, 5);
         hostId = NetworkTransport.AddHost(topology, 8080);
     }
 
@@ -59,13 +64,11 @@ public class NetworkScript : MonoBehaviour {
             case NetworkEventType.ConnectEvent:
                 OnConnectReceived(hConnectionId, remoteHostId, channelId);
                 break;
-            case NetworkEventType.DataEvent:
-                //var data = Encoding.ASCII.GetString(recBuffer);
-                //OnDataReceived(hConnectionId, remoteHostId, myReiliableChannelId, data);//3
+            case NetworkEventType.DisconnectEvent:
                 break;
-            case NetworkEventType.DisconnectEvent: //4
-                
-                //OnClientDisconnected(receivedConnectionId, data);
+            case NetworkEventType.DataEvent:
+                var data = Encoding.ASCII.GetString(recBuffer);
+                clients[hConnectionId].GetComponent<PlayerConnexionScript>().ParseMessage(data);
                 break;
         }
     }
@@ -76,14 +79,12 @@ public class NetworkScript : MonoBehaviour {
         {
             OnDisconnect(clients[connectionId].GetComponent<PlayerConnexionScript>().clientData);
         }
-        Debug.Log(clients.Count);
         Destroy(clients[connectionId]);
         clients.Remove(connectionId);
-        Debug.Log(clients.Count);
     }
 
     void OnConnectReceived(int receivedConnectionId, int receivedHostId, int receivedChannelId)
-    {//If party has not started.
+    {
         PlayerConnexionScript.ConnectionData clientData = new PlayerConnexionScript.ConnectionData();
         clientData.connexionId = receivedConnectionId;
         clientData.hostId = receivedHostId;
@@ -100,38 +101,12 @@ public class NetworkScript : MonoBehaviour {
         s.net = this;
         if(OnConnect != null)
             OnConnect(clientData);
-        StartCoroutine(ListenToClient(receivedConnectionId, receivedHostId, clientData));
     }
 
     void OnDisconectReceived(int receivedConnectionId, int receivedHostId, int receivedChannelId)
     {
         Debug.Log("Disconnect event");
         Debug.Log(receivedConnectionId + " : " + receivedHostId);
-    }
-
-    IEnumerator ListenToClient(int receivedConnectionId, int receivedHostId, PlayerConnexionScript.ConnectionData client)
-    {
-        bool connected = true;
-        while (connected)
-        {
-            int hConnectionId;
-            int channelId;
-            byte[] recBuffer = new byte[1024];
-            int bufferSize = 1024;
-            int dataSize;
-            byte error;
-            NetworkEventType recData = NetworkTransport.ReceiveFromHost(receivedHostId, out hConnectionId, out channelId, recBuffer, bufferSize, out dataSize, out error);
-            switch (recData)
-            {
-                case NetworkEventType.Nothing:         //1
-                    break;
-                case NetworkEventType.DisconnectEvent: //4
-                    connected = false;
-                    //OnClientDisconnected(receivedConnectionId, data);
-                    break;
-            }
-            yield return null;
-        }
     }
 
     // Coul'd be null Check the return.

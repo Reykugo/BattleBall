@@ -17,40 +17,44 @@ public class Lobby : UnDestroyable {
     public string lobbyName = "Testing";
     //Behaviour Data
     public int maxPlayers = 4;
-    //Reference Data
-    public NetworkScript net;
+    public int minPlayers = 2;
     //Enums
-    public enum PLAYERS_ENUM { J1=0, J2, J3, J4}
+    public enum PLAYERS_ENUM { J1 = 0, J2, J3, J4 }
 
     //Events
-    public delegate void LobbyObserver(PlayerData playerData, int playerCount);
-    public event LobbyObserver OnPlayerEnter;
-    public event LobbyObserver OnPlayerLeave;
+    public delegate void DoorObserver(PlayerData playerData, int playerCount);
+    public event DoorObserver OnPlayerEnter;
+    public event DoorObserver OnPlayerLeave;
     public delegate void PlayerObserver(PlayerData playerData);
     public event PlayerObserver OnPlayerReady;
+    public delegate void LobbyObserver();
+    public event LobbyObserver OnGameStart;
+    public event LobbyObserver OnGameWillStart;
 
     //Local data
     private ServerNetworkDiscoveryScript netDiscovery;
+    private NetworkScript net;
     private Dictionary<string, PlayerData> players = new Dictionary<string, PlayerData>();
     private int playersCount = 0;
     private bool InGame = false;
 
-	// Use this for initialization
-	void Start () {
-        netDiscovery = GetComponent<ServerNetworkDiscoveryScript>();
+    // Use this for initialization
+    void Start() {
+        netDiscovery = GetComponentInChildren<ServerNetworkDiscoveryScript>();
+        net = GetComponentInChildren<NetworkScript>();
         net.OnConnect += CreatePlayer;
         net.OnDisconnect += DestroyPlayer;
 
         netDiscovery.broadcastData = lobbyName + ";" + playersCount + "/" + maxPlayers;
         netDiscovery.Initialize();
         netDiscovery.StartAsServer();
-	}
+    }
 
     void CreatePlayer(PlayerConnexionScript.ConnectionData connectionData)
     {
         if (playersCount == maxPlayers || InGame)
             return;// TODO send error to client;
-        
+
         if (!players.ContainsKey(connectionData.ipAddress))
         {
             Color[] playerColors = { Color.red, Color.blue, Color.yellow, Color.green };
@@ -62,13 +66,14 @@ public class Lobby : UnDestroyable {
                 connection = connectionData,
                 playerEnum = (PLAYERS_ENUM)playersCount
             };
-            players.Add(connectionData.ipAddress,  p);
+            players.Add(connectionData.ipAddress, p);
             playersCount++;
             //Update broadcast data
-            StartCoroutine(UpdateBroadcastData(lobbyName + ";" + playersCount + "/" + maxPlayers));
+            //StartCoroutine(UpdateBroadcastData(lobbyName + ";" + playersCount + "/" + maxPlayers));
             //Update color;
-            var pScript  = net.GetPlayer(p.connection.connexionId).GetComponent<PlayerConnexionScript>();
+            var pScript = net.GetPlayer(p.connection.connexionId).GetComponent<PlayerConnexionScript>();
             pScript.SendColorUpdate(p.playerColor);
+            pScript.OnMessageReceived += ParseMessage;
             if (OnPlayerEnter != null)
                 OnPlayerEnter(p, playersCount);
         }
@@ -76,9 +81,6 @@ public class Lobby : UnDestroyable {
         {
             Debug.Log("Reconnect requested.");//For ingame;
         }
-
-        if (playersCount == maxPlayers)
-            netDiscovery.StopBroadcast();
     }
 
     void DestroyPlayer(PlayerConnexionScript.ConnectionData connectionData)
@@ -88,6 +90,7 @@ public class Lobby : UnDestroyable {
             PlayerData p = players[connectionData.ipAddress];
             players.Remove(connectionData.ipAddress);
             playersCount--;
+            // StartCoroutine(UpdateBroadcastData(lobbyName + ";" + playersCount + "/" + maxPlayers));
 
             if (OnPlayerLeave != null)
                 OnPlayerLeave(p, playersCount);
@@ -96,18 +99,15 @@ public class Lobby : UnDestroyable {
         {
             Debug.Log("Player already disconnected error");
         }
-        if (!netDiscovery.isActiveAndEnabled)
-        {
-            netDiscovery.StartAsServer();
-            netDiscovery.broadcastData = lobbyName + ";" + playersCount + "/" + maxPlayers;
-        }
     }
 
     public void LoadSceneByIndexIfReady(int index)
     {
-        /*ForeachPlayerisready */
         bool run = true;
-        foreach(var playerMap in players)
+        if (playersCount < minPlayers || playersCount > maxPlayers)
+            return;
+
+        foreach (var playerMap in players)
         {
             if (!playerMap.Value.ready)
             {
@@ -122,7 +122,7 @@ public class Lobby : UnDestroyable {
         }
         else
         {
-            //Players are not ready. Fade.
+            //Players are not ready. Fade.DisplayError;
         }
     }
 
@@ -134,28 +134,48 @@ public class Lobby : UnDestroyable {
             if (players.ContainsKey(connectionData.ipAddress))
             {
                 var p = players[connectionData.ipAddress];
+                Debug.Log("Player ready" + p.ready);
                 p.ready = !p.ready;
-                if(OnPlayerReady != null)
+                Debug.Log("Player ready" + p.ready);
+                players[connectionData.ipAddress] = p;
+                if (OnPlayerReady != null)
                     OnPlayerReady(p);
                 Debug.Log("Player " + players[connectionData.ipAddress].playerName + " Ready : " + players[connectionData.ipAddress].ready);
             }
+            else
+            {
+                Debug.Log("Player don't exists");
+            }
         }
+    }
+
+    public void Back()
+    {
+        foreach (var c in players)
+        {
+            net.Disconnect(c.Value.connection.connexionId);
+        }
+        Destroy(net);
+        if (netDiscovery.isActiveAndEnabled)
+            netDiscovery.StopBroadcast();
+        Destroy(netDiscovery);
+        SceneManager.LoadScene(0);
+        Destroy(gameObject);
     }
 
     IEnumerator UpdateBroadcastData(string data)
     {
         netDiscovery.broadcastData = data;
-        yield return new WaitForEndOfFrame();
-        netDiscovery.StopBroadcast();
-        yield return new WaitForEndOfFrame();
-        netDiscovery.StartAsServer();
-        yield return new WaitForEndOfFrame();
+        if(netDiscovery.isActiveAndEnabled)
+            netDiscovery.StopBroadcast();
+        yield return null;
+        if(!netDiscovery.isActiveAndEnabled)
+            netDiscovery.StartAsServer();
+        yield return null;
         if (playersCount == maxPlayers)
         {
             netDiscovery.StopBroadcast();
         }
-
-        yield return null;
     }
 
 }

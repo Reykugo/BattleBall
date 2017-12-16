@@ -16,7 +16,7 @@ public class PlayerConnexionScript : MonoBehaviour {
         public int port;
     }
 
-    public delegate void NetMessageObserver(string buffer);
+    public delegate void NetMessageObserver(ConnectionData connectionData,string buffer);
     public NetMessageObserver OnMessageReceived;
     public ConnectionData clientData;
     public NetworkScript net;
@@ -33,30 +33,12 @@ public class PlayerConnexionScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        byte error;
-        receivedBuff.Initialize();
-        int receivedSize;
-        NetworkEventType ev= NetworkTransport.ReceiveFromHost(clientData.hostId, out connectionId, out channelId, receivedBuff, 1024, out receivedSize, out error);
-        switch (ev)
-        {
-            case NetworkEventType.DataEvent:
-                string data = Encoding.ASCII.GetString(receivedBuff);
-                OnDataReceived(data);
-                break;
-            case NetworkEventType.ConnectEvent:
-                //OnReconnect;
-                break;
-            case NetworkEventType.DisconnectEvent:
-                //OnDisconnectUnwanted;
-                break;
-            case NetworkEventType.Nothing:
-                break;
-        }
         if (connected)
         {
             disconnectTimer += Time.deltaTime;
             if(disconnectTimer > 5.0f)// 5.0 seconds.
             {
+                byte error;
                 Debug.Log("Disconnect no alive in " + disconnectTimer);
                 NetworkTransport.Disconnect(clientData.hostId, clientData.connexionId, out error);
                 //OnDisconnect;
@@ -66,6 +48,11 @@ public class PlayerConnexionScript : MonoBehaviour {
             }
         }
 
+    }
+
+    public void ParseMessage(string data)
+    {
+        OnDataReceived(data);
     }
 
     private void OnDataReceived(string data)
@@ -79,13 +66,12 @@ public class PlayerConnexionScript : MonoBehaviour {
         }
 
         if (OnMessageReceived != null)
-            OnMessageReceived(data);
+            OnMessageReceived(clientData, data);
     }
 
     public void SendColorUpdate(Color color)
     {
         string colorCommand = PLAYER_UPDATE + ";" + Encoding.ASCII.GetString(NetworkScript.ColorToByte(color));
-        Debug.Log(colorCommand);
         Send(colorCommand);
     }
     private void Send(string message)

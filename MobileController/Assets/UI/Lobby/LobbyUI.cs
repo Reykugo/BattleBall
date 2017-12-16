@@ -42,6 +42,7 @@ public class LobbyUI : FlowStep {
 
     void OnDisconnect()
     {
+        Debug.Log("Disconnecting");
         ready = false; // TODO try to reconnect Few times;
         gameStateManager.TransitToGameSelection();
     }

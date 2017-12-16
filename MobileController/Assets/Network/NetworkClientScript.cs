@@ -37,6 +37,7 @@ namespace Network
         private int myReiliableChannelId;
 
         private int myUnreliableChannelId;
+        private int myStateChannelId;
 
         private ClientNetworkDiscovery networkDiscoveryManager;
 
@@ -57,6 +58,7 @@ namespace Network
 
             myReiliableChannelId = connecConfig.AddChannel(QosType.Reliable);
             myUnreliableChannelId = connecConfig.AddChannel(QosType.Unreliable);
+            myStateChannelId = connecConfig.AddChannel(QosType.ReliableStateUpdate);
 
             topology = new HostTopology(connecConfig, 1);
 
@@ -185,19 +187,6 @@ namespace Network
                             Debug.Log("Connect received but don't match");
                         }
                         break;
-                    case NetworkEventType.DataEvent:
-                        var str = Encoding.ASCII.GetString(receivedBuffer);
-                        /*if (str == "Connected")
-                        {
-                            connected = true;
-                            remoteHostId = receivedHostId;
-                            remoteChannelId = receivedChannelId;
-
-                            StopCoroutine(CONNECT_COROUTINE);
-                            StartCoroutine(ACK_COROUTINE);
-                            OnConnect();
-                        }*/
-                        break;
                     default:
                         break;
                 }
@@ -217,16 +206,14 @@ namespace Network
             byte error;
             while (connected)
             {
-                byte[] buffer = Encoding.ASCII.GetBytes("Alive");
-                if (!NetworkTransport.Send(remoteHostId, connectionId, remoteChannelId, buffer, buffer.Length, out error))
+                if (Send("Alive;") == NetworkError.WrongConnection)
                 {
-                    var netErr = (NetworkError)(error);
-                    Debug.Log("Error : " + netErr);//Handle disconnect.
-                    if (netErr == NetworkError.WrongConnection)
-                    {
-                        connected = false;
-                        break;
-                    }
+                    connected = false;
+                    break;
+                }
+                else
+                {
+                    Debug.Log("Alive Sended");
                 }
                 yield return new WaitForSeconds(0.5f);
             }

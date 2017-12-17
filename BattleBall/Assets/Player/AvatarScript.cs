@@ -23,12 +23,15 @@ public class AvatarScript : MonoBehaviour
     public event AvatarObserver OnAvatarDie;
     public event AvatarObserver OnAvatarFall;
 
-    private ChargeScript dashScript;
+    private DashScript dashScript;
     private MovingScript movingScript;
+
+    //using for test
+    public Color AvatarColor;
 
     private void Awake()
     {
-        dashScript = this.GetComponent<ChargeScript>();
+        dashScript = this.GetComponent<DashScript>();
         movingScript = GetComponent<MovingScript>();
 
         playerMaterial = this.GetComponent<MeshRenderer>().material;
@@ -36,7 +39,7 @@ public class AvatarScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        GetComponent<ParticleSystem>().Stop();
+        SetPlayerColor(AvatarColor);
     }
 
     public void SetInputHandler(PlayerNetHandler handler) //TODO make it cleaner.
@@ -56,6 +59,8 @@ public class AvatarScript : MonoBehaviour
     {
         playerIdentityText.color = color;
         playerMaterial.color = color;
+        this.GetComponent<Light>().color = color;
+        this.GetComponentInChildren<DashSystemScript>().Init(color);
     }
 
     public void PlayerFall()
@@ -79,7 +84,7 @@ public class AvatarScript : MonoBehaviour
     public void SetPlayerCapacityState(bool state = true)
     {
         this.GetComponent<MovingScript>().enabled = state;
-        this.GetComponent<ChargeScript>().enabled = state;
+        this.GetComponent<DashScript>().enabled = state;
         this.GetComponent<Light>().enabled = state;
 
     }
@@ -95,7 +100,7 @@ public class AvatarScript : MonoBehaviour
 
     public void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.tag == "Stunable" && dashScript.IsCharge)
+        if(collision.gameObject.tag == "Stunable" && dashScript.IsOnDash)
         {
             DisabledPlayerCapacity();
             Invoke("EnabledPlayerCapacity", StunDuration);

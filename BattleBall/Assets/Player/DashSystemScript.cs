@@ -13,8 +13,13 @@ public class DashSystemScript : MonoBehaviour {
     private ParticleSystem chargeEffect;
     private ParticleSystem dashEffect;
 
-    public void Init(Color playerColor)
+    private GameObject currentDashEffect;
+
+    private Color playerColor;
+
+    public void Init(Color pColor)
     {
+        playerColor = pColor;
         var mainDashChargerEffect = dashChargerEffect.main;
         mainDashChargerEffect.startColor = playerColor;
         dashChargerEffect.Stop();
@@ -23,9 +28,7 @@ public class DashSystemScript : MonoBehaviour {
         mainChargeEffect.startColor = playerColor;
         chargeEffect.Stop();
 
-        var mainDashEffect = dashEffect.main;
-        mainDashEffect.startColor = playerColor;
-        dashEffect.Stop();
+        
     }
 
     public void EnableDashChargerEffect(bool state)
@@ -55,17 +58,18 @@ public class DashSystemScript : MonoBehaviour {
         }
     }
 
-    public void EnableDashEffect(bool state)
+    public void CreateDashEffect(Vector3 playerDirection)
     {
-        if (state)
-        {
-            dashEffect.Play();
-        }
 
-        else
-        {
-            dashEffect.Stop();
-        }
+        currentDashEffect = Instantiate<GameObject>(DashEffect);
+        currentDashEffect.transform.position = this.transform.position;
+        currentDashEffect.transform.rotation = Quaternion.LookRotation(-playerDirection, new Vector3(0.0f, 1.0f, 0.0f));
+        dashEffect = currentDashEffect.GetComponent<ParticleSystem>();
+        var mainDashEffect = dashEffect.main;
+        mainDashEffect.startColor = playerColor;
+            
+        dashEffect.Play();
+        Destroy(currentDashEffect, 1);
     }
 
 
@@ -74,11 +78,10 @@ public class DashSystemScript : MonoBehaviour {
     void Awake () {
         dashChargerEffect = DashChargerEffect.GetComponent<ParticleSystem>();
         chargeEffect = ChargeEffect.GetComponent<ParticleSystem>();
-        dashEffect = DashEffect.GetComponent<ParticleSystem>();
     }
 	
 	// Update is called once per frame
 	void Update () {
-        DashChargerEffect.transform.eulerAngles = new Vector3(0, 0, 0);
+
     }
 }

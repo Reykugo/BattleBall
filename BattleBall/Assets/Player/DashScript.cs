@@ -59,7 +59,7 @@ public class DashScript : MonoBehaviour
         {
             StopDash(false);
         }
-        DashSystem.transform.rotation = Quaternion.LookRotation(-playerMove.currentDirection, new Vector3(0.0f, 1.0f, 0.0f));
+        
     }
 
 
@@ -76,6 +76,7 @@ public class DashScript : MonoBehaviour
             {
                 chargePower += ChargePerSecond / 4;
                 rb.velocity = Vector3.Lerp(rb.velocity, new Vector3(0, 0, 0), 0.1f);
+                //DashSystem.DashChargerEffect.transform.eulerAngles = new Vector3(0, 0, 0);
             }
             else
             {
@@ -86,16 +87,21 @@ public class DashScript : MonoBehaviour
             yield return new WaitForSeconds(0.25f);
 
         }
+        DashSystem.EnableDashChargerEffect(false);
         DashSystem.EnableChargeEffect(false);
         Vector3 normalizedVelocity = playerMove.currentDirection;
-        DashSystem.EnableDashEffect(true);
+        if (playerMove.currentDirection != Vector3.zero)
+        {
+            DashSystem.CreateDashEffect(playerMove.currentDirection);
+        }
+        
         IsOnDash = true;
         rb.AddForce(normalizedVelocity * chargePower, ForceMode.Impulse);
 
         yield return new WaitForSeconds(ChargeDuration);
         while(rb.velocity.magnitude > playerMove.maxVelocity)
         {  
-                rb.velocity = Vector3.Lerp(rb.velocity, normalizedVelocity, 0.2f);
+            rb.velocity = Vector3.Lerp(rb.velocity, normalizedVelocity, 0.2f);
             yield return new WaitForEndOfFrame();
 
         }

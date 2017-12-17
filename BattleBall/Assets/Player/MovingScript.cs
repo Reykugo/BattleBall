@@ -24,7 +24,7 @@ public class MovingScript : MonoBehaviour
 
     public void SetMovement(Vector3 movement)
     {
-        currentMovement = new Vector3(movement.x, 0f, movement.z);
+        currentMovement = new Vector3(movement.x, 0f, movement.y);
 
         if (movement != new Vector3(0, 0, 0))
         {
@@ -34,10 +34,10 @@ public class MovingScript : MonoBehaviour
 
     public void Update()
     {
-        if(currentMovement == Vector3.zero)
+        /*if(currentMovement == Vector3.zero)
         {
             SetMovement(new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical")));
-        }
+        }*/
     }
 
     void FixedUpdate()

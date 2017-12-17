@@ -33,6 +33,16 @@ public class GameUI : FlowStep {
 	void Update () {
        
 	}
+    void OnEnable()
+    {
+        StartCoroutine("SendAccelerationData");
+    }
+
+    void Disable()
+    {
+        StopCoroutine("SendAccelerationData");
+    }
+
 
 
     IEnumerator SendAccelerationData()
@@ -42,12 +52,14 @@ public class GameUI : FlowStep {
             if (Input.touches.Length > 0)
             {
                 dashLoading = true;
-                OnDash(dashLoading);
+                if (OnDash != null)
+                    OnDash(dashLoading);
             }
             else if (dashLoading)
             {
                 dashLoading = false;
-                OnDash(dashLoading);
+                if(OnDash != null)
+                    OnDash(dashLoading);
             }
 
             byte[] b = BitConverter.GetBytes(dashLoading);

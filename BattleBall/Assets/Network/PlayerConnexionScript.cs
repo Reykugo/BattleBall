@@ -93,6 +93,7 @@ public class PlayerConnexionScript : MonoBehaviour {
                     break;
                 case NetworkEventType.DataEvent:
                     string data = Encoding.ASCII.GetString(receivedBuff);
+                    Debug.Log(data);
                     OnDataReceived(data);
                     break;
             }

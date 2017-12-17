@@ -465,10 +465,8 @@ MonoBehaviour:
     m_SSLCertFilePath: 
     m_SSLPrivateKeyFilePath: 
     m_SSLCAFilePath: 
-    m_Channels:
-    - m_Type: 0
-    - m_Type: 3
-    - m_Type: 7
+    m_Channels: []
+  connectionAuthorized: 1
 --- !u!1001 &631820802
 Prefab:
   m_ObjectHideFlags: 0

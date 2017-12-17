@@ -40,8 +40,12 @@ public class GameUI : FlowStep {
         }
 
         byte[] b = BitConverter.GetBytes(dashLoading);
+        
+        var accelString = Network.NetworkClientScript.VectorToString(Input.acceleration);
+       // Debug.Log(BitConverter.ToString(accelBytes));
+       // Debug.Log(BitConverter.ToString(b));
 
-        net.Send("State;" + Encoding.ASCII.GetString(b) + Encoding.ASCII.GetString(Network.NetworkClientScript.VectorToBytes(Input.acceleration)));
+        net.Send("State;" + Encoding.ASCII.GetString(b) + ";" + accelString);
 	}
 
     void DashHandler(bool isLoading)

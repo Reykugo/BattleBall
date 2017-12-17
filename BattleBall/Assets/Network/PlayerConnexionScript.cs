@@ -8,17 +8,10 @@ public class PlayerConnexionScript : MonoBehaviour {
     const string ALIVE_COMMAND = "Alive";
     const string PLAYER_UPDATE = "PlayerUpdate";
     //PlayerData represent the player states, score, a lot of things. 
-    public struct ConnectionData//TODO make a class REFACTOR;
-    {
-        public int connexionId;
-        public int hostId;
-        public string ipAddress;
-        public int port;
-    }
 
-    public delegate void NetMessageObserver(ConnectionData connectionData,string buffer);
+    public delegate void NetMessageObserver(NetworkScript.ConnectionData connectionData,string buffer);
     public NetMessageObserver OnMessageReceived;
-    public ConnectionData clientData;
+    public NetworkScript.ConnectionData clientData;
     public NetworkScript net;
 
     private byte[] receivedBuff = new byte[1024];
@@ -33,6 +26,7 @@ public class PlayerConnexionScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        
         if (connected)
         {
             disconnectTimer += Time.deltaTime;
@@ -73,6 +67,11 @@ public class PlayerConnexionScript : MonoBehaviour {
     {
         string colorCommand = PLAYER_UPDATE + ";" + Encoding.ASCII.GetString(NetworkScript.ColorToByte(color));
         Send(colorCommand);
+    }
+
+    public void SendStartGame()
+    {
+        Send("StartGame;");
     }
     private void Send(string message)
     {

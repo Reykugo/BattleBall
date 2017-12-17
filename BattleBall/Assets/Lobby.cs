@@ -5,14 +5,9 @@ using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 
 public class Lobby : UnDestroyable {
-    public struct PlayerData
-    {
-        public PLAYERS_ENUM playerEnum; //Represent the player number allowing to represent player by a unique value matching with connexionID;
-        public Color playerColor;
-        public string playerName;
-        public PlayerConnexionScript.ConnectionData connection;
-        public bool ready;
-    }
+ 
+    public GameObject playerPrefab;
+    public NetworkScript net;
 
     public string lobbyName = "Testing";
     //Behaviour Data
@@ -22,58 +17,64 @@ public class Lobby : UnDestroyable {
     public enum PLAYERS_ENUM { J1 = 0, J2, J3, J4 }
 
     //Events
-    public delegate void DoorObserver(PlayerData playerData, int playerCount);
+    public delegate void DoorObserver (PlayerScript player, int playerCount);
     public event DoorObserver OnPlayerEnter;
     public event DoorObserver OnPlayerLeave;
-    public delegate void PlayerObserver(PlayerData playerData);
+    public delegate void PlayerObserver(PlayerScript player);
     public event PlayerObserver OnPlayerReady;
-    public delegate void LobbyObserver();
-    public event LobbyObserver OnGameStart;
-    public event LobbyObserver OnGameWillStart;
 
     //Local data
     private ServerNetworkDiscoveryScript netDiscovery;
-    private NetworkScript net;
-    private Dictionary<string, PlayerData> players = new Dictionary<string, PlayerData>();
-    private int playersCount = 0;
+    private Dictionary<string, GameObject> players = new Dictionary<string, GameObject>();
+    public int playersCount = 0;//Todo use get/set restrictions;
     private bool InGame = false;
+
+    private GameManager gameManager;
 
     // Use this for initialization
     void Start() {
-        netDiscovery = GetComponentInChildren<ServerNetworkDiscoveryScript>();
-        net = GetComponentInChildren<NetworkScript>();
+        netDiscovery = net.gameObject.GetComponent<ServerNetworkDiscoveryScript>();
         net.OnConnect += CreatePlayer;
         net.OnDisconnect += DestroyPlayer;
+        net.OnMessage += DispatchToPlayer;
 
         netDiscovery.broadcastData = lobbyName + ";" + playersCount + "/" + maxPlayers;
         netDiscovery.Initialize();
         netDiscovery.StartAsServer();
+
+        gameManager = GetComponentInChildren<GameManager>();
     }
 
-    void CreatePlayer(PlayerConnexionScript.ConnectionData connectionData)
+    void CreatePlayer(NetworkScript.ConnectionData connectionData)
     {
         if (playersCount == maxPlayers || InGame)
             return;// TODO send error to client;
 
         if (!players.ContainsKey(connectionData.ipAddress))
         {
+            var go = Instantiate(playerPrefab, transform);
+
+            go.name = "player " + connectionData.connexionId + " @" + connectionData.ipAddress;
+            var s = go.GetComponent<PlayerConnexionScript>();
+            s.clientData = connectionData;
+            s.net = net;
             Color[] playerColors = { Color.red, Color.blue, Color.yellow, Color.green };
-            PlayerData p = new PlayerData
-            {
-                ready = false,
-                playerName = "J" + connectionData.connexionId,
-                playerColor = playerColors[connectionData.connexionId - 1],
-                connection = connectionData,
-                playerEnum = (PLAYERS_ENUM)playersCount
-            };
-            players.Add(connectionData.ipAddress, p);
+
+            var p = go.GetComponent<PlayerScript>();
+            p.playerColor = playerColors[connectionData.connexionId - 1];
+            p.playerConnexion = s;
+            p.playerName = "J" + connectionData.connexionId;
+            p.ready = false;
+            p.playerEnum = (PLAYERS_ENUM)(connectionData.connexionId - 1);//TEMP TODO remove;
+            //add a int / bool dictionnary or a list.
+
+            players.Add(connectionData.ipAddress, go);
             playersCount++;
             //Update broadcast data
             //StartCoroutine(UpdateBroadcastData(lobbyName + ";" + playersCount + "/" + maxPlayers));
             //Update color;
-            var pScript = net.GetPlayer(p.connection.connexionId).GetComponent<PlayerConnexionScript>();
-            pScript.SendColorUpdate(p.playerColor);
-            pScript.OnMessageReceived += ParseMessage;
+            s.SendColorUpdate(p.playerColor);
+            s.OnMessageReceived += ParseMessage;
             if (OnPlayerEnter != null)
                 OnPlayerEnter(p, playersCount);
         }
@@ -83,17 +84,18 @@ public class Lobby : UnDestroyable {
         }
     }
 
-    void DestroyPlayer(PlayerConnexionScript.ConnectionData connectionData)
+    void DestroyPlayer(NetworkScript.ConnectionData connectionData)
     {
         if (players.ContainsKey(connectionData.ipAddress))
         {
-            PlayerData p = players[connectionData.ipAddress];
+            GameObject p = players[connectionData.ipAddress];
             players.Remove(connectionData.ipAddress);
             playersCount--;
             // StartCoroutine(UpdateBroadcastData(lobbyName + ";" + playersCount + "/" + maxPlayers));
 
             if (OnPlayerLeave != null)
-                OnPlayerLeave(p, playersCount);
+                OnPlayerLeave(p.GetComponent<PlayerScript>(), playersCount);
+            Destroy(p);
         }
         else
         {
@@ -109,7 +111,7 @@ public class Lobby : UnDestroyable {
 
         foreach (var playerMap in players)
         {
-            if (!playerMap.Value.ready)
+            if (!playerMap.Value.GetComponent<PlayerScript>().ready)
             {
                 run = false;
                 break;
@@ -117,8 +119,14 @@ public class Lobby : UnDestroyable {
         }
         if (run)
         {
-            InGame = true;
+            List<GameObject> playersGO = new List<GameObject>(players.Values);
+            foreach(var player in playersGO)
+            {
+                player.GetComponent<PlayerConnexionScript>().SendStartGame();
+            }
+           gameManager.players = playersGO;
             SceneManager.LoadScene(index);
+            InGame = true;//TODO state;
         }
         else
         {
@@ -126,21 +134,28 @@ public class Lobby : UnDestroyable {
         }
     }
 
-    void ParseMessage(PlayerConnexionScript.ConnectionData connectionData, string buffer)
+    //TODO refactor 
+
+    void DispatchToPlayer(NetworkScript.ConnectionData connectionData, string buffer)
+    {
+        players[connectionData.ipAddress].GetComponent<PlayerConnexionScript>().ParseMessage(buffer);  
+    }
+
+    void ParseMessage(NetworkScript.ConnectionData connectionData, string buffer)
     {
         string[] command = buffer.Split(";".ToCharArray());
         if (command[0] == "Ready")
         {
             if (players.ContainsKey(connectionData.ipAddress))
             {
-                var p = players[connectionData.ipAddress];
+                var p = players[connectionData.ipAddress].GetComponent<PlayerScript>();
+
                 Debug.Log("Player ready" + p.ready);
                 p.ready = !p.ready;
                 Debug.Log("Player ready" + p.ready);
-                players[connectionData.ipAddress] = p;
                 if (OnPlayerReady != null)
                     OnPlayerReady(p);
-                Debug.Log("Player " + players[connectionData.ipAddress].playerName + " Ready : " + players[connectionData.ipAddress].ready);
+                Debug.Log("Player " + p.playerName + " Ready : " + p.ready);
             }
             else
             {
@@ -153,7 +168,7 @@ public class Lobby : UnDestroyable {
     {
         foreach (var c in players)
         {
-            net.Disconnect(c.Value.connection.connexionId);
+            net.Disconnect(c.Value.GetComponent<PlayerConnexionScript>().clientData.connexionId);
         }
         Destroy(net);
         if (netDiscovery.isActiveAndEnabled)

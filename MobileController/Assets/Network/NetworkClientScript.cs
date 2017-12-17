@@ -116,6 +116,7 @@ namespace Network
         {
             byte error;
             byte[] buffer = Encoding.ASCII.GetBytes(data);
+            Debug.Log(BitConverter.ToString(buffer));
             if(!NetworkTransport.Send(remoteHostId, connectionId, myReiliableChannelId, buffer, buffer.Length, out error))
             {
                 Debug.Log("Error : " + (NetworkError)(error));
@@ -123,6 +124,14 @@ namespace Network
             
             return (NetworkError)(error);
         }
+
+        public NetworkError SendCommandAndData(byte[] data, int dataSize)
+        {
+            byte err;
+            NetworkTransport.Send(remoteHostId, connectionId, myReiliableChannelId, data, dataSize, out err);
+            return (NetworkError)err;
+        }
+
         public void Connect(string ipv4)
         {
             StartCoroutine(ConnectAndWaitResponse(ipv4, port, 60));
@@ -233,6 +242,12 @@ namespace Network
             System.Buffer.BlockCopy(z, 0, final, w.Length+x.Length+y.Length, z.Length);
 
             return final;
+        }
+
+        public static string VectorToString(Vector3 v)
+        {
+            string str = v.x + ";" + v.y + ";" + v.z;
+            return str;
         }
 
         public static byte[] VectorToBytes(Vector3 v)

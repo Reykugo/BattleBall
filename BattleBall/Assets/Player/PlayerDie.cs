@@ -9,7 +9,7 @@ public class PlayerDie : MonoBehaviour {
     {
         if(other.tag == "Player")
         {
-            other.GetComponent<PlayerScript>().PlayerFall();
+            other.GetComponent<AvatarScript>().PlayerFall();//TODO do something else;
         }
     }
 

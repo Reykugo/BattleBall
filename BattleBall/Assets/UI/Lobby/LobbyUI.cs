@@ -16,16 +16,16 @@ public class LobbyUI : MonoBehaviour {
         lobby.OnPlayerReady += SetReadyLayout;
 	}
 
-    void SetPlayerLayout(Lobby.PlayerData playerData, int playerCount)
+    void SetPlayerLayout(PlayerScript playerData, int playerCount)
     {
         var image = playersUI[(int)playerData.playerEnum].GetComponentInChildren<Image>();
         image.color = playerData.playerColor;
         image.transform.GetComponent<RectTransform>().localPosition = new Vector3(0f, 200 - 100 * ((int)playerData.playerEnum), 0f);
         playersUI[(int)playerData.playerEnum].GetComponentInChildren<WaitingScript>().enabled = false;
-        playersUI[(int)playerData.playerEnum].GetComponentInChildren<Text>().text = playerData.playerName + " - " + playerData.connection.ipAddress;
+        playersUI[(int)playerData.playerEnum].GetComponentInChildren<Text>().text = playerData.playerName + " - " + playerData.playerConnexion.clientData.ipAddress;
     }
 
-    void SetReadyLayout(Lobby.PlayerData playerData)
+    void SetReadyLayout(PlayerScript playerData)
     {
         //Tmp change message
         if (playerData.ready)
@@ -34,12 +34,12 @@ public class LobbyUI : MonoBehaviour {
         }
         else
         {
-            playersUI[(int)playerData.playerEnum].GetComponentInChildren<Text>().text = playerData.playerName + " - " + playerData.connection.ipAddress;
+            playersUI[(int)playerData.playerEnum].GetComponentInChildren<Text>().text = playerData.playerName + " - " + playerData.playerConnexion.clientData.ipAddress;
         }
         //TODO Add Ready Icon;
     }
 
-    void SetWaitingLayout(Lobby.PlayerData playerData, int playerCount)
+    void SetWaitingLayout(PlayerScript playerData, int playerCount)
     {
         var image = playersUI[(int)playerData.playerEnum].GetComponentInChildren<Image>();
         image.color = new Color(57f / 255f, 57f / 255f, 57f / 255f);
@@ -47,7 +47,4 @@ public class LobbyUI : MonoBehaviour {
         playersUI[(int)playerData.playerEnum].GetComponent<RectTransform>().localPosition = Vector3.zero;
         playersUI[(int)playerData.playerEnum].GetComponentInChildren<WaitingScript>().enabled = true;
     }
-
-
-
 }

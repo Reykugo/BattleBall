@@ -15,7 +15,7 @@ public class ChargeScript : MonoBehaviour
   
     public float chargePower = 0;
 
-    private PlayerScript player;
+    private ParticleSystem particleSystem;
     private MovingScript playerMove;
 
     private Rigidbody rb;
@@ -23,45 +23,50 @@ public class ChargeScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        player = this.GetComponent<PlayerScript>();
+        particleSystem = this.GetComponent<ParticleSystem>();
         rb = GetComponent<Rigidbody>();
         playerMove= GetComponent<MovingScript>();
+    }
+
+
+    public void StartDash(bool isDashing)
+    {
+        if(!isOnCharge)
+        {
+            makeCharge = isDashing;
+            StartCoroutine(Charge());
+        }
+    }
+
+    public void StopDash(bool isDashing)
+    {
+        makeCharge = isDashing;
     }
 
     // Update is called once per frame
     void Update()
     {
         //Used for testing
-        if (playerMove.IsGrounded)
+        if (playerMove.IsGrounded && Input.GetKeyDown("space"))
         {
-            if (Input.GetKeyDown("space"))
-            {
-                if (!isOnCharge)
-                {
-                    makeCharge = true;
-                    StartCoroutine(Charge());
-                }
-
-            }
+            StartDash(true);
         }
 
         //Used for testing
         if (Input.GetKeyUp("space"))
         {
-            makeCharge = false;
-
+            StopDash(false);
         }
-
     }
 
-
+    //TODO do better;
     IEnumerator Charge()
     {
         isOnCharge = true;
         chargePower = 0;
 
         //chargeParticles.GetComponent<ParticleSystem.ColorOverLifetimeModule>().color =  
-        player.particleSystem.Play();
+        particleSystem.Play();
         while (makeCharge)
         {
             if (chargePower <= MaxChargePower)
@@ -69,21 +74,21 @@ public class ChargeScript : MonoBehaviour
                 chargePower += ChargePerSecond / 4;
                 Debug.Log(chargePower);
                 rb.velocity = Vector3.Lerp(rb.velocity, new Vector3(0, 0, 0), 0.1f);
-                ParticleSystem.ShapeModule s = player.particleSystem.shape;
+                ParticleSystem.ShapeModule s = particleSystem.shape;
                 s.radius = Mathf.Lerp(1, 0.01f, (chargePower/MaxChargePower));
-                var main = player.particleSystem.main;
+                var main = particleSystem.main;
             }
             else
             {
-                ParticleSystem.ShapeModule s = player.particleSystem.shape;
+                ParticleSystem.ShapeModule s = particleSystem.shape;
                 s.radius = 0.01f; 
             }
             yield return new WaitForSeconds(0.25f);
 
         }
-        ParticleSystem.ShapeModule shape = player.particleSystem.shape;
+        ParticleSystem.ShapeModule shape = particleSystem.shape;
         shape.radius = 1;
-        player.particleSystem.Stop();
+        particleSystem.Stop();
         Vector3 normalizedVelocity = GetComponent<MovingScript>().currentDirection;
         /*Vector3 normalizedVelocity = rb.velocity.normalized;*/
 

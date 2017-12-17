@@ -9,11 +9,19 @@ using System;
 
 public class NetworkScript : MonoBehaviour {
 
+    public struct ConnectionData//TODO make a class REFACTOR;
+    {
+        public int connexionId;
+        public int hostId;
+        public string ipAddress;
+        public int port;
+    }
 
     public GlobalConfig GConfig = new GlobalConfig();
     public ConnectionConfig ConnectConfig = new ConnectionConfig();
 
-    public delegate void NetObserver(PlayerConnexionScript.ConnectionData connectionData);
+    public delegate void NetObserver(ConnectionData connectionData);
+    public delegate void MessageObserver(ConnectionData data, string buffer);
     public delegate void ErrorNetObserver(NetworkError error);
 
     public event NetObserver OnConnect;
@@ -21,11 +29,12 @@ public class NetworkScript : MonoBehaviour {
 
     public event NetObserver OnDisconnect;
 
-    public GameObject playerNetworkPrefab;
+    public event MessageObserver OnMessage;
+
     int hostId;
 
     //TODO identify with local IP address, more reliable than abstract connectionID;
-    private Dictionary<int, GameObject> clients = new Dictionary<int, GameObject>();
+    private Dictionary<int, ConnectionData> clients = new Dictionary<int, ConnectionData>();
 
     private HostTopology topology;
     private int myUnreliableChannelId;
@@ -67,8 +76,12 @@ public class NetworkScript : MonoBehaviour {
             case NetworkEventType.DisconnectEvent:
                 break;
             case NetworkEventType.DataEvent:
-                var data = Encoding.ASCII.GetString(recBuffer);
-                clients[hConnectionId].GetComponent<PlayerConnexionScript>().ParseMessage(data);
+                if (OnMessage != null)
+                {
+                    var data = Encoding.ASCII.GetString(recBuffer);
+                    
+                    OnMessage(clients[hConnectionId], data);
+                }
                 break;
         }
     }
@@ -77,42 +90,32 @@ public class NetworkScript : MonoBehaviour {
     {
         if(OnDisconnect != null)
         {
-            OnDisconnect(clients[connectionId].GetComponent<PlayerConnexionScript>().clientData);
+            OnDisconnect(clients[connectionId]);
         }
-        Destroy(clients[connectionId]);
         clients.Remove(connectionId);
     }
 
     void OnConnectReceived(int receivedConnectionId, int receivedHostId, int receivedChannelId)
     {
-        PlayerConnexionScript.ConnectionData clientData = new PlayerConnexionScript.ConnectionData();
-        clientData.connexionId = receivedConnectionId;
-        clientData.hostId = receivedHostId;
-        NetworkID networkId;
-        NodeID dstNode;
-        byte error;
-        NetworkTransport.GetConnectionInfo(receivedHostId, receivedConnectionId, out clientData.ipAddress, out clientData.port, out networkId, out dstNode, out error);
-
-        var go = Instantiate(playerNetworkPrefab, transform);
-        clients.Add(receivedConnectionId, go);
-        clients[receivedConnectionId].name = "player " + receivedConnectionId + " @"+ clientData.ipAddress;
-        var s = clients[receivedConnectionId].GetComponent<PlayerConnexionScript>();
-        s.clientData = clientData;
-        s.net = this;
-        if(OnConnect != null)
-            OnConnect(clientData);
+        if (!clients.ContainsKey(receivedConnectionId))
+        {
+            ConnectionData clientData = new ConnectionData();
+            clientData.connexionId = receivedConnectionId;
+            clientData.hostId = receivedHostId;
+            NetworkID networkId;
+            NodeID dstNode;
+            byte error;
+            NetworkTransport.GetConnectionInfo(receivedHostId, receivedConnectionId, out clientData.ipAddress, out clientData.port, out networkId, out dstNode, out error);
+            clients.Add(receivedConnectionId, clientData);
+            if (OnConnect != null)
+                OnConnect(clientData);
+        }
     }
 
     void OnDisconectReceived(int receivedConnectionId, int receivedHostId, int receivedChannelId)
     {
         Debug.Log("Disconnect event");
         Debug.Log(receivedConnectionId + " : " + receivedHostId);
-    }
-
-    // Coul'd be null Check the return.
-    public GameObject GetPlayer(int connexionId)
-    {
-        return clients.ContainsKey(connexionId) ? clients[connexionId] : null;
     }
 
     public static Quaternion BytesToQuaternion(byte[] bytes, int startIndex)
@@ -127,9 +130,17 @@ public class NetworkScript : MonoBehaviour {
 
     public static Vector3 BytesToVector(byte[] bytes, int startIndex)
     {
+        Debug.Log(BitConverter.ToString(bytes));
+
+
         float x = BitConverter.ToSingle(bytes, startIndex);
+        Debug.Log(x + " : " +  BitConverter.ToString(bytes, startIndex, 4));
+
         float y = BitConverter.ToSingle(bytes, startIndex + 4);
+        Debug.Log(y + " : " + BitConverter.ToString(bytes, startIndex + 4, 4));
+
         float z = BitConverter.ToSingle(bytes, startIndex + 8);
+        Debug.Log(z + " : " + BitConverter.ToString(bytes, startIndex + 8, 4));
 
         return new Vector3(x, y, z);
     }

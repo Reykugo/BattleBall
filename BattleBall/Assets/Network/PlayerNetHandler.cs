@@ -33,9 +33,16 @@ public class PlayerNetHandler {
 
             bool dashing = BitConverter.ToBoolean(buff, 0);
 
-            Debug.Log("Dashing : " + dashing);
-            Vector3 acceleration = new Vector3(float.Parse(command[2]), float.Parse(command[3]), float.Parse(command[4]));
-            Debug.Log("Acceleration" + acceleration);
+            //Debug.Log("Dashing : " + dashing);
+            float x = 0;
+            float y = 0;
+            float z = 0;
+            float.TryParse(command[2], out x);
+            float.TryParse(command[3], out y);
+            float.TryParse(command[4], out z);
+
+            Vector3 acceleration = new Vector3(x,y,z);
+           // Debug.Log("Acceleration" + acceleration);
 
             if (OnMoving != null)
                 OnMoving(acceleration);

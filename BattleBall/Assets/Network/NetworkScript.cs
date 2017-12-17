@@ -33,6 +33,7 @@ public class NetworkScript : MonoBehaviour {
 
     int hostId;
 
+    public bool connectionAuthorized = true;
     //TODO identify with local IP address, more reliable than abstract connectionID;
     private Dictionary<int, ConnectionData> clients = new Dictionary<int, ConnectionData>();
 
@@ -55,34 +56,39 @@ public class NetworkScript : MonoBehaviour {
         hostId = NetworkTransport.AddHost(topology, 8080);
     }
 
+
+    private byte[] buffer = new byte[1025];
     void Update()
     {
-        int remoteHostId;
-        int hConnectionId;
-        int channelId;
-        byte[] recBuffer = new byte[1024];
-        int bufferSize = 1024;
-        int dataSize;
-        byte error;
-        NetworkEventType recData = NetworkTransport.Receive(out remoteHostId, out hConnectionId, out channelId, recBuffer, bufferSize, out dataSize, out error);
-        Debug.Log(recData);
-        switch (recData)
+        if (connectionAuthorized)
         {
-            case NetworkEventType.Nothing:         //1
-                break;
-            case NetworkEventType.ConnectEvent:
-                OnConnectReceived(hConnectionId, remoteHostId, channelId);
-                break;
-            case NetworkEventType.DisconnectEvent:
-                break;
-            case NetworkEventType.DataEvent:
-                if (OnMessage != null)
-                {
-                    var data = Encoding.ASCII.GetString(recBuffer);
+            buffer.Initialize();
+            int remoteHostId;
+            int hConnectionId;
+            int channelId;
+            int dataSize;
+            byte error;
+            NetworkEventType recData = NetworkTransport.Receive(out remoteHostId, out hConnectionId, out channelId, buffer, buffer.Length, out dataSize, out error);
+            Debug.Log(recData);
+            switch (recData)
+            {
+                case NetworkEventType.Nothing:         //1
+                    break;
+                case NetworkEventType.ConnectEvent:
+                    OnConnectReceived(hConnectionId, remoteHostId, channelId);
+                    break;
+                case NetworkEventType.DisconnectEvent:
+                    break;
+                case NetworkEventType.DataEvent:
+                    if (OnMessage != null)
+                    {
+                        var data = Encoding.ASCII.GetString(buffer);
                     
-                    OnMessage(clients[hConnectionId], data);
-                }
-                break;
+                        OnMessage(clients[hConnectionId], data);
+                    }
+                    break;
+            }
+
         }
     }
 

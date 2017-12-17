@@ -24,11 +24,21 @@ public class MovingScript : MonoBehaviour
 
     public void SetMovement(Vector3 movement)
     {
-        currentMovement = new Vector3(movement.x, 0f, movement.y);
-
-        if (movement != new Vector3(0, 0, 0))
+        movement.x *= 2;
+        movement.y *= 2;
+        if(movement.x < 0.01 && movement.x > 0.01)
         {
-            currentDirection = movement.normalized;
+            movement.x = 0;
+        }
+        if(movement.y < 0.01 && movement.y > -0.01)
+        {
+            movement.y = 0;
+        }
+
+        currentMovement = new Vector3(movement.x, 0f, movement.y);
+        if (currentMovement != new Vector3(0, 0, 0))
+        {
+            currentDirection = currentMovement.normalized;
         }
     }
 

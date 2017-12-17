@@ -119,12 +119,13 @@ public class Lobby : UnDestroyable {
         }
         if (run)
         {
+            net.connectionAuthorized = false;
             List<GameObject> playersGO = new List<GameObject>(players.Values);
             foreach(var player in playersGO)
             {
                 player.GetComponent<PlayerConnexionScript>().SendStartGame();
             }
-           gameManager.players = playersGO;
+            gameManager.players = playersGO;
             SceneManager.LoadScene(index);
             InGame = true;//TODO state;
         }

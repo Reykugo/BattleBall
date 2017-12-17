@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -19,15 +20,16 @@ public class PlayerConnexionScript : MonoBehaviour {
     private int connectionId;
     private float disconnectTimer = 0f;
     private bool connected = true;
+   
 	// Use this for initialization
 	void Start () {
-		
-	}
+        
+    }
 	
 	// Update is called once per frame
 	void Update () {
-        
-        if (connected)
+
+       /* if (connected)
         {
             disconnectTimer += Time.deltaTime;
             if(disconnectTimer > 5.0f)// 5.0 seconds.
@@ -40,10 +42,9 @@ public class PlayerConnexionScript : MonoBehaviour {
                 connected = false;
                 net.Disconnect(clientData.connexionId);
             }
-        }
+        }*/
 
     }
-
     public void ParseMessage(string data)
     {
         OnDataReceived(data);
@@ -51,14 +52,7 @@ public class PlayerConnexionScript : MonoBehaviour {
 
     private void OnDataReceived(string data)
     {
-        var command = data.Split(";".ToCharArray());
-        if (command[0] == ALIVE_COMMAND)
-        {
-            Debug.Log("Alive : " + disconnectTimer);
-            disconnectTimer = 0f;
-            return;
-        }
-
+        disconnectTimer = 0f;
         if (OnMessageReceived != null)
             OnMessageReceived(clientData, data);
     }
@@ -72,6 +66,7 @@ public class PlayerConnexionScript : MonoBehaviour {
     public void SendStartGame()
     {
         Send("StartGame;");
+        StartCoroutine(NetGameHandler());
     }
     private void Send(string message)
     {
@@ -79,5 +74,29 @@ public class PlayerConnexionScript : MonoBehaviour {
         byte[] buffer = Encoding.ASCII.GetBytes(message);
         NetworkTransport.Send(clientData.hostId, clientData.connexionId, channelId, buffer, buffer.Length, out error);
         //Check error;
+    }
+
+    IEnumerator NetGameHandler()
+    {
+        while (true)
+        {
+            int channelId;
+            byte error;
+            int receivedSize;
+
+            NetworkEventType eventType = NetworkTransport.ReceiveFromHost(clientData.hostId, out clientData.connexionId, out channelId, receivedBuff, receivedBuff.Length, out receivedSize, out error);
+            switch (eventType)
+            {
+                case NetworkEventType.ConnectEvent:
+                    break;
+                case NetworkEventType.DisconnectEvent:
+                    break;
+                case NetworkEventType.DataEvent:
+                    string data = Encoding.ASCII.GetString(receivedBuff);
+                    OnDataReceived(data);
+                    break;
+            }
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
     }
 }

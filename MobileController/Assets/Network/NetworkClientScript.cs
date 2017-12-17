@@ -69,6 +69,7 @@ namespace Network
 
         // Update is called once per frame
         public void Update () {
+            
             if (connected)
             {
                 int receivedConnectionId;
@@ -132,6 +133,19 @@ namespace Network
             return (NetworkError)err;
         }
 
+        public NetworkError SendStateUpdate(string data)
+        {
+            byte error;
+            byte[] buffer = Encoding.ASCII.GetBytes(data);
+            Debug.Log(BitConverter.ToString(buffer));
+            if (!NetworkTransport.Send(remoteHostId, connectionId, myStateChannelId, buffer, buffer.Length, out error))
+            {
+                Debug.Log("Error : " + (NetworkError)(error));
+            }
+
+            return (NetworkError)(error);
+        }
+
         public void Connect(string ipv4)
         {
             StartCoroutine(ConnectAndWaitResponse(ipv4, port, 60));
@@ -187,7 +201,6 @@ namespace Network
                             remoteChannelId = receivedChannelId;
                             
                             StopCoroutine(CONNECT_COROUTINE);
-                            StartCoroutine(ACK_COROUTINE);
                             OnConnect();
                             yield break;
                         }
@@ -208,25 +221,6 @@ namespace Network
                     OnConnectTimeOut((NetworkError)error);
                 }
             }
-        }
-
-        IEnumerator SendAck()
-        {
-            byte error;
-            while (connected)
-            {
-                if (Send("Alive;") == NetworkError.WrongConnection)
-                {
-                    connected = false;
-                    break;
-                }
-                else
-                {
-                    Debug.Log("Alive Sended");
-                }
-                yield return new WaitForSeconds(0.5f);
-            }
-            Disconnect();
         }
         public static byte[] QuaternionToBytes(Quaternion q)
         {

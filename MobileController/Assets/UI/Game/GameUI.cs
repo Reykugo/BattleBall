@@ -16,6 +16,7 @@ public class GameUI : FlowStep {
     public Network.NetworkClientScript net;
     private GameStateManager gameStateManager;
 
+    Vector3 lastAcceleration;
     bool dashLoading = true;
 
     void Start()
@@ -24,29 +25,43 @@ public class GameUI : FlowStep {
         net.OnMessageReceived += ParseServerMessage;
         net.OnDisconnect += Quit;
         OnDash += DashHandler;
+
+        StartCoroutine("SendAccelerationData");
     }
 
 	// Update is called once per frame
 	void Update () {
-        if (Input.touches.Length > 0)
-        {
-            dashLoading = true;
-            OnDash(dashLoading);
-        }
-        else if (dashLoading)
-        {
-            dashLoading = false;
-            OnDash(dashLoading);
-        }
-
-        byte[] b = BitConverter.GetBytes(dashLoading);
-        
-        var accelString = Network.NetworkClientScript.VectorToString(Input.acceleration);
-       // Debug.Log(BitConverter.ToString(accelBytes));
-       // Debug.Log(BitConverter.ToString(b));
-
-        net.Send("State;" + Encoding.ASCII.GetString(b) + ";" + accelString);
+       
 	}
+
+
+    IEnumerator SendAccelerationData()
+    {
+        while (true)
+        {
+            if (Input.touches.Length > 0)
+            {
+                dashLoading = true;
+                OnDash(dashLoading);
+            }
+            else if (dashLoading)
+            {
+                dashLoading = false;
+                OnDash(dashLoading);
+            }
+
+            byte[] b = BitConverter.GetBytes(dashLoading);
+             
+            var accelString = Network.NetworkClientScript.VectorToString(Input.acceleration);
+            if(Input.acceleration == Vector3.zero)
+            {
+                accelString = Network.NetworkClientScript.VectorToString(new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0f));
+            }
+            net.SendStateUpdate("State;" + Encoding.ASCII.GetString(b) + ";" + accelString);
+            
+            yield return new WaitForSeconds(0.05f);
+        }
+    }
 
     void DashHandler(bool isLoading)
     {

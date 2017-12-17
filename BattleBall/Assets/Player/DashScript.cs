@@ -27,7 +27,6 @@ public class DashScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        player = this.GetComponent<PlayerScript>();
         rb = GetComponent<Rigidbody>();
         playerMove= GetComponent<MovingScript>();
     }
@@ -60,6 +59,7 @@ public class DashScript : MonoBehaviour
         {
             StopDash(false);
         }
+        DashSystem.transform.rotation = Quaternion.LookRotation(-playerMove.currentDirection, new Vector3(0.0f, 1.0f, 0.0f));
     }
 
 
@@ -87,15 +87,15 @@ public class DashScript : MonoBehaviour
 
         }
         DashSystem.EnableChargeEffect(false);
+        Vector3 normalizedVelocity = playerMove.currentDirection;
         DashSystem.EnableDashEffect(true);
-        Vector3 normalizedVelocity = GetComponent<MovingScript>().currentDirection;
-
         IsOnDash = true;
         rb.AddForce(normalizedVelocity * chargePower, ForceMode.Impulse);
+
         yield return new WaitForSeconds(ChargeDuration);
-        while(rb.velocity.magnitude > GetComponent<MovingScript>().maxVelocity)
-        {
-            rb.velocity = Vector3.Lerp(rb.velocity, normalizedVelocity, 0.2f);
+        while(rb.velocity.magnitude > playerMove.maxVelocity)
+        {  
+                rb.velocity = Vector3.Lerp(rb.velocity, normalizedVelocity, 0.2f);
             yield return new WaitForEndOfFrame();
 
         }

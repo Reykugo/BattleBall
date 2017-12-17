@@ -80,6 +80,5 @@ public class DashSystemScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         DashChargerEffect.transform.eulerAngles = new Vector3(0, 0, 0);
-        DashEffect.transform.eulerAngles = new Vector3(180, 0, 0);
-	}
+    }
 }

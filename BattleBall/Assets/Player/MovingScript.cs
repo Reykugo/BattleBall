@@ -28,16 +28,16 @@ public class MovingScript : MonoBehaviour
 
         if (movement != new Vector3(0, 0, 0))
         {
-            currentDirection = movement.normalized;
+            currentDirection = currentMovement.normalized;
         }
     }
 
     public void Update()
     {
-        /*if(currentMovement == Vector3.zero)
+        if(currentMovement == Vector3.zero)
         {
-            SetMovement(new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical")));
-        }*/
+            SetMovement(new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0f));
+        }
     }
 
     void FixedUpdate()

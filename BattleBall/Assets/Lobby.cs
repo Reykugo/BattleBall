@@ -47,8 +47,9 @@ public class Lobby : UnDestroyable {
 
     void CreatePlayer(NetworkScript.ConnectionData connectionData)
     {
-        if (playersCount == maxPlayers || InGame)
-            return;// TODO send error to client;
+        if (players.Count == maxPlayers && !InGame)
+            return;
+
 
         if (!players.ContainsKey(connectionData.ipAddress))
         {
@@ -78,15 +79,32 @@ public class Lobby : UnDestroyable {
             if (OnPlayerEnter != null)
                 OnPlayerEnter(p, playersCount);
         }
-        else//Reconnect or error
+        else if (InGame && players.ContainsKey(connectionData.ipAddress))
         {
-            Debug.Log("Reconnect requested.");//For ingame;
+            Debug.Log("Reconnected");
+            netDiscovery.StopBroadcast();
+            var go = players[connectionData.ipAddress];
+            var s = go.GetComponent<PlayerConnexionScript>();
+            var p = go.GetComponent<PlayerScript>();
+            //Player asked to reconnect.
+            //Update his Color
+            s.SendColorUpdate(p.playerColor);
+            s.SendStartGame();//If needed, might be ignored by the client.
+            //SendHim
+            gameManager.PlayerReconnected(connectionData);
         }
     }
 
     void DestroyPlayer(NetworkScript.ConnectionData connectionData)
     {
-        if (players.ContainsKey(connectionData.ipAddress))
+        if(InGame && players.ContainsKey(connectionData.ipAddress))
+        {
+            //PlayerDisconnected after game started.
+            netDiscovery.Initialize();
+            netDiscovery.StartAsServer();
+            gameManager.PlayerDisconnected(connectionData);
+        }
+        else if( !InGame && players.ContainsKey(connectionData.ipAddress))
         {
             GameObject p = players[connectionData.ipAddress];
             players.Remove(connectionData.ipAddress);
@@ -128,7 +146,9 @@ public class Lobby : UnDestroyable {
                 player.GetComponent<PlayerConnexionScript>().SendStartGame();
             }
             gameManager.players = playersGO;
+            netDiscovery.StopBroadcast();
             SceneManager.LoadScene(index);
+            //Unsubscribe to networkEvent;
             InGame = true;//TODO state;
         }
         else
@@ -152,13 +172,9 @@ public class Lobby : UnDestroyable {
             if (players.ContainsKey(connectionData.ipAddress))
             {
                 var p = players[connectionData.ipAddress].GetComponent<PlayerScript>();
-
-                Debug.Log("Player ready" + p.ready);
                 p.ready = !p.ready;
-                Debug.Log("Player ready" + p.ready);
                 if (OnPlayerReady != null)
                     OnPlayerReady(p);
-                Debug.Log("Player " + p.playerName + " Ready : " + p.ready);
             }
             else
             {
@@ -177,6 +193,8 @@ public class Lobby : UnDestroyable {
         Destroy(gameObject);
     }
 
+
+    //Should live in the ServerDiscoveryScript.
     IEnumerator UpdateBroadcastData(string data)
     {
         netDiscovery.broadcastData = data;
@@ -186,7 +204,7 @@ public class Lobby : UnDestroyable {
         if(!netDiscovery.running)
             netDiscovery.StartAsServer();
         yield return new WaitForSeconds(0.5f);
-        if (playersCount == maxPlayers)
+        if (playersCount == maxPlayers || InGame)
         {
             netDiscovery.StopBroadcast();
         }

@@ -49,7 +49,7 @@ public class GameStateManager : MonoBehaviour {
     public void TransitToGame(Color color)
     {
         current.gameObject.SetActive(false);
-        game.gameObject.SetActive(true);
+        game.Show();//TODO move show in flowStep;
         current = game;
         game.GetComponentInChildren<Image>().color = color;
     }

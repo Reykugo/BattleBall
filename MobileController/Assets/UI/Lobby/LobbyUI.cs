@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Text;
 using System;
+using UnityEngine.Networking;
 
 public class LobbyUI : FlowStep {
 
@@ -66,7 +67,11 @@ public class LobbyUI : FlowStep {
 #endif
         }
         ready = !ready;
-        net.Send("Ready;");
+        NetworkError netErr = net.Send("Ready;");
+        if (netErr == NetworkError.WrongConnection)
+        {
+            net.Disconnect();
+        }
     }
 
     void ParseServerMessage(string data)

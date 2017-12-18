@@ -71,7 +71,7 @@ public class Lobby : UnDestroyable {
             players.Add(connectionData.ipAddress, go);
             playersCount++;
             //Update broadcast data
-            //StartCoroutine(UpdateBroadcastData(lobbyName + ";" + playersCount + "/" + maxPlayers));
+            StartCoroutine(UpdateBroadcastData(lobbyName + ";" + playersCount + "/" + maxPlayers));
             //Update color;
             s.SendColorUpdate(p.playerColor);
             s.OnMessageReceived += ParseMessage;
@@ -91,11 +91,13 @@ public class Lobby : UnDestroyable {
             GameObject p = players[connectionData.ipAddress];
             players.Remove(connectionData.ipAddress);
             playersCount--;
-            // StartCoroutine(UpdateBroadcastData(lobbyName + ";" + playersCount + "/" + maxPlayers));
-
-            if (OnPlayerLeave != null)
-                OnPlayerLeave(p.GetComponent<PlayerScript>(), playersCount);
-            Destroy(p);
+            if (p != null)
+            {
+                StartCoroutine(UpdateBroadcastData(lobbyName + ";" + playersCount + "/" + maxPlayers));
+                if (OnPlayerLeave != null)
+                    OnPlayerLeave(p.GetComponent<PlayerScript>(), playersCount);
+                Destroy(p);
+            }
         }
         else
         {
@@ -167,10 +169,6 @@ public class Lobby : UnDestroyable {
 
     public void Back()
     {
-        foreach (var c in players)
-        {
-            net.Disconnect(c.Value.GetComponent<PlayerConnexionScript>().clientData.connexionId);
-        }
         Destroy(net);
         if (netDiscovery.isActiveAndEnabled)
             netDiscovery.StopBroadcast();
@@ -182,12 +180,12 @@ public class Lobby : UnDestroyable {
     IEnumerator UpdateBroadcastData(string data)
     {
         netDiscovery.broadcastData = data;
-        if(netDiscovery.isActiveAndEnabled)
+        if(netDiscovery.running)
             netDiscovery.StopBroadcast();
-        yield return null;
-        if(!netDiscovery.isActiveAndEnabled)
+        yield return new WaitForSeconds(0.5f);
+        if(!netDiscovery.running)
             netDiscovery.StartAsServer();
-        yield return null;
+        yield return new WaitForSeconds(0.5f);
         if (playersCount == maxPlayers)
         {
             netDiscovery.StopBroadcast();

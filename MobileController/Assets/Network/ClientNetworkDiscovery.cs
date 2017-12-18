@@ -17,24 +17,33 @@ public class ClientNetworkDiscovery : NetworkDiscovery
 
     void OnEnable()
     {
-        bool complete = Initialize();
-        if (!complete)
-        {
-            Debug.Log("port not available");
-        }
-        //Start listning to broadcast
-        StartAsClient();
+        StartCoroutine("StartBroadcasting");
     }
 
     void OnDisable()
     {
-        StopBroadcast();
+        StopCoroutine("StartBroadcasting");
+        if (running)
+            StopBroadcast();
     }
 
     public override void OnReceivedBroadcast(string fromAddress, string data)
     {
         if(OnHostDiscovered != null)
             OnHostDiscovered(fromAddress, data);
+    }
+
+    IEnumerator StartBroadcasting()
+    {
+        //Try to initialize.
+        bool complete = Initialize();
+
+        yield return new WaitForSeconds(0.5f);
+
+        if (complete && !running)
+            StartAsClient();
+
+        yield return null;
     }
 
 }

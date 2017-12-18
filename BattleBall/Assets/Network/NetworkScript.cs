@@ -44,6 +44,12 @@ public class NetworkScript : MonoBehaviour {
 
     void OnDestroy()
     {
+        List<ConnectionData> connections = new List<ConnectionData>(clients.Values);
+        foreach(var connection in connections)
+        {
+            Disconnect(connection.connexionId);
+        }
+        clients.Clear();
         NetworkTransport.Shutdown();
     }
     // Use this for initialization
@@ -60,33 +66,32 @@ public class NetworkScript : MonoBehaviour {
     private byte[] buffer = new byte[1025];
     void Update()
     {
-        
-            buffer.Initialize();
-            int remoteHostId;
-            int hConnectionId;
-            int channelId;
-            int dataSize;
-            byte error;
-            NetworkEventType recData = NetworkTransport.Receive(out remoteHostId, out hConnectionId, out channelId, buffer, buffer.Length, out dataSize, out error);
-            Debug.Log(recData);
-            switch (recData)
-            {
-                case NetworkEventType.Nothing:         //1
-                    break;
-                case NetworkEventType.ConnectEvent:
-                    OnConnectReceived(hConnectionId, remoteHostId, channelId);
-                    break;
-                case NetworkEventType.DisconnectEvent:
-                    break;
-                case NetworkEventType.DataEvent:
-                    if (OnMessage != null)
-                    {
-                        var data = Encoding.ASCII.GetString(buffer);
+        buffer.Initialize();
+        int remoteHostId;
+        int hConnectionId;
+        int channelId;
+        int dataSize;
+        byte error;
+        NetworkEventType recData = NetworkTransport.Receive(out remoteHostId, out hConnectionId, out channelId, buffer, buffer.Length, out dataSize, out error);
+        switch (recData)
+        {
+            case NetworkEventType.Nothing:         //1
+                break;
+            case NetworkEventType.ConnectEvent:
+                OnConnectReceived(hConnectionId, remoteHostId, channelId);
+                break;
+            case NetworkEventType.DisconnectEvent:
+                Disconnect(hConnectionId);
+                break;
+            case NetworkEventType.DataEvent:
+                if (OnMessage != null)
+                {
+                    var data = Encoding.ASCII.GetString(buffer);
                     
-                        OnMessage(clients[hConnectionId], data);
-                    }
-                    break;
-            }
+                    OnMessage(clients[hConnectionId], data);
+                }
+                break;
+        }
     }
 
     public void Disconnect(int connectionId)
@@ -115,12 +120,6 @@ public class NetworkScript : MonoBehaviour {
             if (OnConnect != null)
                 OnConnect(clientData);
         }
-    }
-
-    void OnDisconectReceived(int receivedConnectionId, int receivedHostId, int receivedChannelId)
-    {
-        Debug.Log("Disconnect event");
-        Debug.Log(receivedConnectionId + " : " + receivedHostId);
     }
 
     public static Quaternion BytesToQuaternion(byte[] bytes, int startIndex)

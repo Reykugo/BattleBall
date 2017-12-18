@@ -30,7 +30,7 @@ namespace Network
         private int connectionId;
         private int hostId;
         private bool connected = false;
-        bool IsConnected() {
+        public bool IsConnected() {
             return connected;
         }
 
@@ -49,7 +49,7 @@ namespace Network
         private byte[] receivedBuffer;
 
         // Use this for initialization
-        void Start () {
+        void Start() {
             Init();
         }
 
@@ -69,8 +69,8 @@ namespace Network
         }
 
         // Update is called once per frame
-        public void Update () {
-            
+        public void Update() {
+
             if (connected)
             {
                 int receivedConnectionId;
@@ -87,6 +87,9 @@ namespace Network
                         case NetworkEventType.Nothing:         //3
                             break;
                         case NetworkEventType.DisconnectEvent:
+                            Debug.Log("My host/connexionid " + hostId + "" + connectionId);
+                            Debug.Log("disconect from : " + remoteHostId + "" + receivedConnectionId);
+                            Disconnect();//No more server the game has ended abruptly redirect to the game select. Or we wanted to quit the app.
                             break;
                         case NetworkEventType.ConnectEvent:
                             break;
@@ -109,7 +112,7 @@ namespace Network
              * client receive response and make a connect request.
              * host receive connect request and approuve
              * then client send every Inputs of the Smartphone.
-             * Inputs are : 
+            * Inputs are : 
              * Pressed / Release Events with a coroutine on pressed that compute force of the pression
              * Release Event, take the coroutines values and apply them.
              * 
@@ -123,11 +126,11 @@ namespace Network
             byte error;
             byte[] buffer = Encoding.ASCII.GetBytes(data);
             Debug.Log(BitConverter.ToString(buffer));
-            if(!NetworkTransport.Send(remoteHostId, connectionId, myReiliableChannelId, buffer, buffer.Length, out error))
+            if (!NetworkTransport.Send(remoteHostId, connectionId, myReiliableChannelId, buffer, buffer.Length, out error))
             {
                 Debug.Log("Error : " + (NetworkError)(error));
             }
-            
+
             return (NetworkError)(error);
         }
 
@@ -139,13 +142,13 @@ namespace Network
         }
 
         public NetworkError SendStateUpdate(string data)
-        {
+        { 
             byte error;
             byte[] buffer = Encoding.ASCII.GetBytes(data);
             Debug.Log(BitConverter.ToString(buffer));
             if (!NetworkTransport.Send(remoteHostId, connectionId, myStateChannelId, buffer, buffer.Length, out error))
             {
-                Debug.Log("Error : " + (NetworkError)(error));
+                Debug.LogError("Error : " + (NetworkError)(error));
             }
 
             return (NetworkError)(error);
@@ -161,6 +164,7 @@ namespace Network
         public void Disconnect()
         {
             byte error;
+            connected = false;
             NetworkTransport.Disconnect(hostId, connectionId, out error);
             if(OnDisconnect != null)
                 OnDisconnect();
@@ -214,6 +218,9 @@ namespace Network
                             Debug.Log("Connect received but don't match");
                         }
                         break;
+                    case NetworkEventType.DisconnectEvent:
+                        Debug.Log("Disconnect Event");
+                        break;
                     default:
                         break;
                 }
@@ -230,6 +237,14 @@ namespace Network
                 }
             }
         }
+
+        void OnDestroy()
+        {
+            OnDisconnect = null;
+
+            Disconnect();
+        }
+
         public static byte[] QuaternionToBytes(Quaternion q)
         {
             Debug.Log(q);

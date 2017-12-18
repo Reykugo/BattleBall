@@ -25,8 +25,6 @@ public class GameUI : FlowStep {
         net.OnMessageReceived += ParseServerMessage;
         net.OnDisconnect += Quit;
         OnDash += DashHandler;
-
-        StartCoroutine("SendAccelerationData");
     }
 
 	// Update is called once per frame
@@ -35,19 +33,23 @@ public class GameUI : FlowStep {
 	}
     void OnEnable()
     {
-        StartCoroutine("SendAccelerationData");
+        
     }
-
+    public void Show()
+    {
+        if (!gameObject.activeSelf)
+        {
+            gameObject.SetActive(true);
+            StartCoroutine("SendAccelerationData");
+        }
+    }
     void Disable()
     {
-        StopCoroutine("SendAccelerationData");
     }
-
-
 
     IEnumerator SendAccelerationData()
     {
-        while (true)
+        while (enabled)
         {
             if (Input.touches.Length > 0)
             {

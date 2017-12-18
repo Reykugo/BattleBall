@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
         {
             //Deinit
         }
-        else //We are loading a game;
+        else if(scene.buildIndex >= 2)//We are loading a game;
         {
             areaConfig = GameObject.Find("Area").GetComponent<AreaConfig>();
             if (areaConfig.spawners.Count < players.Count)
@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour
         foreach(var p in players)
         {
             PlayerScript playerScript = p.GetComponent<PlayerScript>();
-
+            
             Transform spawner = spawners[Random.Range(0, spawners.Count)];
             GameObject avatar = Instantiate(avatarPrefab);
             AvatarScript avatarConf = avatar.GetComponent<AvatarScript>();

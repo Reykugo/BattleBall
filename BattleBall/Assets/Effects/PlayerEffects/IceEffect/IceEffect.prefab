@@ -54,7 +54,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IcePrefab: {fileID: 1760426401663536, guid: 34d88182d12da02488691aee6e89cccf, type: 2}
-  GenerationSpeed: 0.1
+  GenerationSpeed: 0.3
   IceDuration: 5
 --- !u!198 &198563720096132744
 ParticleSystem:

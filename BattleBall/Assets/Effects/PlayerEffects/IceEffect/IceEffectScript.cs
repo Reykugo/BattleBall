@@ -13,4 +13,22 @@ public class IceEffectScript : MonoBehaviour {
 	void Update () {
 		
 	}
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "Player")
+        {
+            other.GetComponent<Collider>().material.dynamicFriction = 0;
+            other.GetComponent<Rigidbody>().velocity *= 1.1f;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            other.GetComponent<Collider>().material.dynamicFriction = 0.6f;
+        }
+    }
 }

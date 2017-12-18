@@ -259,7 +259,7 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -294,7 +294,7 @@ RectTransform:
   m_GameObject: {fileID: 325676195}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 476, y: 147.5, z: 0}
-  m_LocalScale: {x: 1.19, y: 1.19, z: 1.19}
+  m_LocalScale: {x: 0.49583334, y: 0.49583334, z: 0.49583334}
   m_Children:
   - {fileID: 1910670588}
   - {fileID: 5801509}
@@ -433,7 +433,7 @@ MonoBehaviour:
     m_ReactorMaximumSentMessages: 1024
     m_MaxPacketSize: 2000
     m_MaxHosts: 16
-    m_ThreadPoolSize: 1
+    m_ThreadPoolSize: 4
     m_MinTimerTimeout: 1
     m_MaxTimerTimeout: 12000
     m_MinNetSimulatorTimeout: 1
@@ -455,7 +455,7 @@ MonoBehaviour:
     m_SendDelay: 10
     m_MaxCombinedReliableMessageSize: 100
     m_MaxCombinedReliableMessageCount: 10
-    m_MaxSentMessageQueueSize: 512
+    m_MaxSentMessageQueueSize: 256
     m_AcksType: 1
     m_UsePlatformSpecificProtocols: 0
     m_InitialBandwidth: 0
@@ -641,7 +641,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 795133056}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 369.99997, y: -93.94958, z: 0}
+  m_LocalPosition: {x: 930, y: -267.479, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1882456636}
@@ -802,7 +802,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1242749555}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -399.99997, y: 123.94958, z: 0}
+  m_LocalPosition: {x: -960, y: 297.479, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5801509}

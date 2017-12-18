@@ -20,7 +20,8 @@ public class LobbyUI : MonoBehaviour {
     {
         var image = playersUI[(int)playerData.playerEnum].GetComponentInChildren<Image>();
         image.color = playerData.playerColor;
-        image.transform.GetComponent<RectTransform>().localPosition = new Vector3(0f, 200 - 100 * ((int)playerData.playerEnum), 0f);
+        
+        //image.transform.GetComponent<RectTransform>().localPosition = new Vector3(0f, 200 - 100 * ((int)playerData.playerEnum), 0f);
         playersUI[(int)playerData.playerEnum].GetComponentInChildren<WaitingScript>().enabled = false;
         playersUI[(int)playerData.playerEnum].GetComponentInChildren<Text>().text = playerData.playerName + " - " + playerData.playerConnexion.clientData.ipAddress;
     }
@@ -43,7 +44,7 @@ public class LobbyUI : MonoBehaviour {
     {
         var image = playersUI[(int)playerData.playerEnum].GetComponentInChildren<Image>();
         image.color = new Color(57f / 255f, 57f / 255f, 57f / 255f);
-        image.transform.GetComponent<RectTransform>().localPosition = new Vector3(0f, 200 - 100 * ((int)playerData.playerEnum), 0f);
+        //image.transform.GetComponent<RectTransform>().localPosition = new Vector3(0f, 200 - 100 * ((int)playerData.playerEnum), 0f);
         playersUI[(int)playerData.playerEnum].GetComponent<RectTransform>().localPosition = Vector3.zero;
         playersUI[(int)playerData.playerEnum].GetComponentInChildren<WaitingScript>().enabled = true;
     }

@@ -18,6 +18,7 @@ public class PlayerScript : MonoBehaviour {
     public void SetUpAvatar(GameObject avatar)
     {
         var avatarScript = avatar.GetComponent<AvatarScript>();
+        avatarScript.AvatarColor = playerColor;
         avatarScript.SetPlayerColor(playerColor);
         avatarScript.SetPlayerName(playerName);
         

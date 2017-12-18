@@ -293,7 +293,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 325676195}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 476, y: 147.5, z: 0}
+  m_LocalPosition: {x: 476, y: 147, z: 0}
   m_LocalScale: {x: 0.49583334, y: 0.49583334, z: 0.49583334}
   m_Children:
   - {fileID: 1910670588}
@@ -442,8 +442,8 @@ MonoBehaviour:
     m_PacketSize: 1440
     m_FragmentSize: 500
     m_ResendTimeout: 1200
-    m_DisconnectTimeout: 2000
-    m_ConnectTimeout: 2000
+    m_DisconnectTimeout: 600
+    m_ConnectTimeout: 60
     m_MinUpdateTimeout: 10
     m_PingTimeout: 500
     m_ReducedPingTimeout: 100
@@ -641,7 +641,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 795133056}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 930, y: -267.479, z: 0}
+  m_LocalPosition: {x: 930, y: -266.47058, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1882456636}
@@ -802,7 +802,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1242749555}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -960, y: 297.479, z: 0}
+  m_LocalPosition: {x: -960, y: 296.47058, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5801509}

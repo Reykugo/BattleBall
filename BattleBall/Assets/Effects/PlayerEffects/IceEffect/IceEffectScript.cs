@@ -20,7 +20,7 @@ public class IceEffectScript : MonoBehaviour {
         if(other.tag == "Player")
         {
             other.GetComponent<Collider>().material.dynamicFriction = 0;
-            other.GetComponent<Rigidbody>().velocity *= 1.1f;
+            //other.GetComponent<Rigidbody>().velocity *= 1.1f;
         }
     }
 
@@ -28,7 +28,7 @@ public class IceEffectScript : MonoBehaviour {
     {
         if (other.tag == "Player")
         {
-            other.GetComponent<Collider>().material.dynamicFriction = 0.6f;
+            other.GetComponent<Collider>().material.dynamicFriction = 1f;
         }
     }
 }

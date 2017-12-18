@@ -20,8 +20,9 @@ namespace Network
         public delegate void ErrorNetObserver(NetworkError error);
         public delegate void MessageObserver(string data);
 
+        public event NetObserver WillConnect;
         public event NetObserver OnConnect;
-        public event ErrorNetObserver OnConnectTimeOut;
+        public event ErrorNetObserver OnConnectError;
 
         public event NetObserver OnDisconnect;
         public event MessageObserver OnMessageReceived;
@@ -77,24 +78,28 @@ namespace Network
                 int receivedDataSize;
                 byte error;
                 receivedBuffer.Initialize();
-
-                var response = NetworkTransport.ReceiveFromHost(remoteHostId, out receivedConnectionId, out receivedChannelId, receivedBuffer, 1024, out receivedDataSize, out error);
-                switch (response)
+                NetworkEventType response;
+                do
                 {
-                    case NetworkEventType.Nothing:         //3
-                        break;
-                    case NetworkEventType.DisconnectEvent:
-                        break;
-                    case NetworkEventType.ConnectEvent:
-                        break;
-                    default:
-                        var str = Encoding.ASCII.GetString(receivedBuffer);
-                        if (OnMessageReceived != null)
-                        {
-                            OnMessageReceived(str);
-                        }
-                        break;
-                }
+                    response = NetworkTransport.ReceiveFromHost(remoteHostId, out receivedConnectionId, out receivedChannelId, receivedBuffer, 1024, out receivedDataSize, out error);
+                    switch (response)
+                    {
+                        case NetworkEventType.Nothing:         //3
+                            break;
+                        case NetworkEventType.DisconnectEvent:
+                            break;
+                        case NetworkEventType.ConnectEvent:
+                            break;
+                        default:
+                            var str = Encoding.ASCII.GetString(receivedBuffer);
+                            if (OnMessageReceived != null)
+                            {
+                                OnMessageReceived(str);
+                            }
+                            break;
+                    }
+
+                } while (response != NetworkEventType.Nothing);
             }
             /* Logic
              * 
@@ -148,12 +153,13 @@ namespace Network
 
         public void Connect(string ipv4)
         {
+            if (WillConnect != null)
+                WillConnect();
             StartCoroutine(ConnectAndWaitResponse(ipv4, port, 60));
         }
 
         public void Disconnect()
         {
-            StopCoroutine("SendAck");
             byte error;
             NetworkTransport.Disconnect(hostId, connectionId, out error);
             if(OnDisconnect != null)
@@ -162,15 +168,14 @@ namespace Network
         IEnumerator ConnectAndWaitResponse(string ip, int port, int retryTime = 5)
         {
             const string CONNECT_COROUTINE = "ConnectAndWaitResponse";
-            const string ACK_COROUTINE = "SendAck";
 
             byte error;
 
             connectionId = NetworkTransport.Connect(hostId, ip, port, 0, out error);
             NetworkError netErr = (NetworkError)error;
             if (netErr != NetworkError.Ok)
-            {
-                
+            { 
+                OnConnectError(netErr);
                 StopCoroutine(CONNECT_COROUTINE);
                 yield break;
             }
@@ -214,11 +219,14 @@ namespace Network
                 }
                 yield return new WaitForSeconds(0.1f);
             }
+            Debug.Log(connected);
             if (!connected)
             {
-                if(OnConnectTimeOut != null)
+                if(OnConnectError != null)
                 {
-                    OnConnectTimeOut((NetworkError)error);
+                    netErr = (NetworkError)error;
+                    netErr = (netErr == NetworkError.Ok) ? NetworkError.Timeout : netErr;
+                    OnConnectError(netErr);
                 }
             }
         }

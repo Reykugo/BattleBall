@@ -66,7 +66,7 @@ public class PlayerConnexionScript : MonoBehaviour {
     public void SendStartGame()
     {
         Send("StartGame;");
-        StartCoroutine(NetGameHandler());
+        //StartCoroutine(NetGameHandler());
     }
     private void Send(string message)
     {
@@ -83,6 +83,7 @@ public class PlayerConnexionScript : MonoBehaviour {
             int channelId;
             byte error;
             int receivedSize;
+            Debug.Log(clientData.connexionId);
 
             NetworkEventType eventType = NetworkTransport.ReceiveFromHost(clientData.hostId, out clientData.connexionId, out channelId, receivedBuff, receivedBuff.Length, out receivedSize, out error);
             switch (eventType)

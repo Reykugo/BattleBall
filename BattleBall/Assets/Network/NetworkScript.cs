@@ -60,8 +60,7 @@ public class NetworkScript : MonoBehaviour {
     private byte[] buffer = new byte[1025];
     void Update()
     {
-        if (connectionAuthorized)
-        {
+        
             buffer.Initialize();
             int remoteHostId;
             int hConnectionId;
@@ -88,8 +87,6 @@ public class NetworkScript : MonoBehaviour {
                     }
                     break;
             }
-
-        }
     }
 
     public void Disconnect(int connectionId)
@@ -108,6 +105,8 @@ public class NetworkScript : MonoBehaviour {
             ConnectionData clientData = new ConnectionData();
             clientData.connexionId = receivedConnectionId;
             clientData.hostId = receivedHostId;
+            Debug.Log(clientData.hostId);
+
             NetworkID networkId;
             NodeID dstNode;
             byte error;

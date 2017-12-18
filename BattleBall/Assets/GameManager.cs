@@ -21,8 +21,10 @@ public class GameManager : MonoBehaviour
     private List<GameObject> avatars;//Object
    
     private AreaConfig areaConfig; //TerrainConfiguration (spawners...)
+    public PopUp reconnectPopUp;
     void Start()
     {
+        
         avatars = new List<GameObject>();
         SceneManager.sceneLoaded += OnTerrainLoaded;
     }
@@ -32,7 +34,8 @@ public class GameManager : MonoBehaviour
     {
         if(scene.buildIndex == 1) //==Lobby
         {
-            //Deinit
+            
+
         }
         else if(scene.buildIndex >= 2)//We are loading a game;
         {
@@ -42,8 +45,58 @@ public class GameManager : MonoBehaviour
             GeneratePlayers();
         }
     }
+    public void PlayerReconnected(NetworkScript.ConnectionData connectionData)
+    {
+        ResumeGame();
+        reconnectPopUp.Close();
+    }
 
-    public void GeneratePlayers()
+    public void PlayerDisconnected(NetworkScript.ConnectionData connectionData)
+    {
+        PauseGame();
+        reconnectPopUp.Open();
+    }
+
+
+    public void ResumeGame()
+    {
+        Time.timeScale = 1f;
+    }
+
+    public void PauseGame()
+    {
+        //UI display Waiting for player truc to reconnect
+        // Pause the game
+        Time.timeScale = 0f;
+
+        //Display Pause or waiting popUp.
+    }
+
+    public void PlayerIsDead(GameObject avatar)
+    {
+        avatars.Remove(avatar);
+        Destroy(avatar);
+        if (avatars.Count == 1)
+        {
+            PlayerWin(avatars[0]);
+        }
+    }
+
+    void PlayerWin(GameObject avatar)
+    {
+        Debug.Log(avatar.GetComponent<PlayerScript>().playerName);
+
+        //TODO Be able to restart a new fresh game from the lobby
+
+        OnLeaving();
+    }
+
+    void OnLeaving()
+    {
+        players.Clear();
+    }
+
+    private void GeneratePlayers()
     {
         var spawners = areaConfig.spawners;
         
@@ -64,21 +117,5 @@ public class GameManager : MonoBehaviour
             avatars.Add(avatar);
             spawners.Remove(spawner);
         }
-    }
-
-
-    public void PlayerIsDead(GameObject avatar)
-    {
-        avatars.Remove(avatar);
-        Destroy(avatar);
-        if(avatars.Count == 1)
-        {
-            PlayerWin(avatars[0]);
-        }
-    }
-
-    void PlayerWin(GameObject avatar)
-    {
-        Debug.Log(avatar.GetComponent<PlayerScript>().playerName);
     }
 }

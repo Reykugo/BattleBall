@@ -31,7 +31,7 @@ public class DisconnectPopUp : PopUp
 
     public override void Open()
     {
-        text.text = "Disconnected, host is offline...";
+        text.text = "Disconnected.\nHost is offline.";
         button.gameObject.SetActive(true);
 
         base.Open();

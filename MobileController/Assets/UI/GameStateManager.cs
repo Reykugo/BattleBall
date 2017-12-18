@@ -35,7 +35,6 @@ public class GameStateManager : MonoBehaviour {
         lobby.gameObject.SetActive(false);
         game.gameObject.SetActive(false);
 
-        Screen.sleepTimeout = SleepTimeout.NeverSleep;
     }
 
     public void TransitToLobby()
@@ -44,6 +43,8 @@ public class GameStateManager : MonoBehaviour {
         current.gameObject.SetActive(false);
         lobby.gameObject.SetActive(true);
         current = lobby;
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+
     }
 
     public void TransitToGame(Color color)
@@ -60,5 +61,6 @@ public class GameStateManager : MonoBehaviour {
         gameSelection.gameObject.SetActive(true);
         current = gameSelection;
         //TODO networkClientScript.Disconnect();
+        Screen.sleepTimeout = SleepTimeout.SystemSetting;
     }
 }

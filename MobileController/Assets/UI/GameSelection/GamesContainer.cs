@@ -32,6 +32,8 @@ public class GamesContainer : MonoBehaviour {
         if (!gamesFound.ContainsKey(ip))
         {
             go = Instantiate(GameButton, transform);
+            var rectTransform = go.GetComponent<RectTransform>();
+            rectTransform.localPosition = new Vector3(rectTransform.localPosition.x, rectTransform.localPosition.y + -60f * gamesFound.Count-1, rectTransform.localPosition.z);
             gamesFound.Add(ip, go);
             var button = go.GetComponent<Button>();
             button.onClick.AddListener(() => { net.Connect(ip); });

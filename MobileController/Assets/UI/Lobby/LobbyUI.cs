@@ -74,7 +74,7 @@ public class LobbyUI : FlowStep {
         var command = data.Split(";".ToCharArray());
         if (command[0] == START_GAME)
         {
-            gameStateManager.TransitToGame();
+            gameStateManager.TransitToGame(playerColor);
         }
         else if(command[0] == PLAYER_UPDATE)
         {

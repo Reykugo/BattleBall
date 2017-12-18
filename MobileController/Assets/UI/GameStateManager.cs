@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameStateManager : MonoBehaviour {
     //Transit from => to
@@ -33,6 +34,8 @@ public class GameStateManager : MonoBehaviour {
         current = gameSelection;
         lobby.gameObject.SetActive(false);
         game.gameObject.SetActive(false);
+
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
     }
 
     public void TransitToLobby()
@@ -43,11 +46,12 @@ public class GameStateManager : MonoBehaviour {
         current = lobby;
     }
 
-    public void TransitToGame()
+    public void TransitToGame(Color color)
     {
         current.gameObject.SetActive(false);
         game.gameObject.SetActive(true);
         current = game;
+        game.GetComponentInChildren<Image>().color = color;
     }
 
     public void TransitToGameSelection()

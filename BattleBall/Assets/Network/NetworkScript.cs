@@ -96,11 +96,14 @@ public class NetworkScript : MonoBehaviour {
 
     public void Disconnect(int connectionId)
     {
-        if(OnDisconnect != null)
+        if (clients.ContainsKey(connectionId))
         {
-            OnDisconnect(clients[connectionId]);
+            if(OnDisconnect != null)
+            {
+                OnDisconnect(clients[connectionId]);
+            }
+            clients.Remove(connectionId);
         }
-        clients.Remove(connectionId);
     }
 
     void OnConnectReceived(int receivedConnectionId, int receivedHostId, int receivedChannelId)

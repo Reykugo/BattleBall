@@ -98,12 +98,17 @@ public class AvatarScript : MonoBehaviour
         SetPlayerCapacityState(true);
     }
 
+    public void StunPlayer()
+    {
+        DisabledPlayerCapacity();
+        Invoke("EnabledPlayerCapacity", StunDuration);
+    }
+
     public void OnCollisionEnter(Collision collision)
     {
         if(collision.gameObject.tag == "Stunable" && dashScript.IsOnDash)
         {
-            DisabledPlayerCapacity();
-            Invoke("EnabledPlayerCapacity", StunDuration);
+            StunPlayer();
         }
     }
 }

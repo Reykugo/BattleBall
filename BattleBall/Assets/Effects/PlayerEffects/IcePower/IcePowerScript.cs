@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IceEffectScript : MonoBehaviour {
+public class IcePowerScript : MonoBehaviour {
 
 
     public GameObject player;

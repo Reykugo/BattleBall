@@ -22,9 +22,9 @@ GameObject:
   - component: {fileID: 33117867492525466}
   - component: {fileID: 65900723178487376}
   - component: {fileID: 23280287077288914}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: BlockBase
-  m_TagString: Untagged
+  m_TagString: Field
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -1,13 +1,12 @@
 fileFormatVersion: 2
-guid: 94e1974ce2cadf640a5d32175c020bd3
-timeCreated: 1513355018
+guid: eb58e925cbfc72042a887f9d4fb7a484
+timeCreated: 1513354999
 licenseType: Free
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
-  - GazParticles: {fileID: 1741282583651052, guid: e1f78e4cf0c1a2943b22331e9057006f,
-      type: 2}
+  - MetalMaterial: {fileID: 2100000, guid: eb8ca42fd4025af4896fa2ad6f373d92, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

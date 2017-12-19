@@ -5,7 +5,7 @@ public class FollowPositionScript : MonoBehaviour
 {
 
     [SerializeField]
-    private Transform ObjectToFollow;
+    public Transform ObjectToFollow;
 
     [SerializeField]
     private bool X; //if object can follow on this position axis

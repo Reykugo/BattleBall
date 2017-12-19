@@ -29,6 +29,7 @@ namespace Network
 
         private int connectionId;
         private int hostId;
+        private string remoteServerIp;
         private bool connected = false;
         public bool IsConnected() {
             return connected;
@@ -169,6 +170,11 @@ namespace Network
             if(OnDisconnect != null)
                 OnDisconnect();
         }
+
+        public void Reconnect()
+        {
+            StartCoroutine(ConnectAndWaitResponse(remoteServerIp, port, 60));
+        }
         IEnumerator ConnectAndWaitResponse(string ip, int port, int retryTime = 5)
         {
             const string CONNECT_COROUTINE = "ConnectAndWaitResponse";
@@ -178,8 +184,11 @@ namespace Network
             connectionId = NetworkTransport.Connect(hostId, ip, port, 0, out error);
             NetworkError netErr = (NetworkError)error;
             if (netErr != NetworkError.Ok)
-            { 
-                OnConnectError(netErr);
+            {
+                if (OnConnectError != null)
+                {
+                    OnConnectError(netErr);
+                }
                 StopCoroutine(CONNECT_COROUTINE);
                 yield break;
             }
@@ -206,6 +215,7 @@ namespace Network
                             && (NetworkError)error == NetworkError.Ok)// response to a connect Event.
                         {
                             connected = true;
+                            remoteServerIp = ip;
                             remoteHostId = receivedHostId;
                             remoteChannelId = receivedChannelId;
                             

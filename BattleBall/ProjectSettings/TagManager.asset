@@ -18,8 +18,8 @@ TagManager:
   - 
   - GazPlayer
   - Player
-  - 
-  - 
+  - GroundChecker
+  - Ground
   - 
   - 
   - 

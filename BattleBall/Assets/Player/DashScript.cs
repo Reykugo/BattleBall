@@ -20,6 +20,8 @@ public class DashScript : MonoBehaviour
 
     private PlayerScript player;
     private MovingScript playerMove;
+    public GroundCheckerScript groundChecker;
+
 
     private Rigidbody rb;
 
@@ -49,7 +51,7 @@ public class DashScript : MonoBehaviour
     void Update()
     {
         //Used for testing
-        if (playerMove.IsGrounded && Input.GetKeyDown("space"))
+        if (groundChecker.IsGrounded && Input.GetKeyDown("space"))
         {
             StartDash(true);
         }

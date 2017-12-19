@@ -8,7 +8,7 @@ public class MovingScript : MonoBehaviour
 
     private Rigidbody rb;
 
-    public bool IsGrounded = false;
+    public GroundCheckerScript groundChecker;
 
     public Vector3 currentDirection;
 
@@ -52,7 +52,7 @@ public class MovingScript : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (IsGrounded)
+        if (groundChecker.IsGrounded)
         {
             if(rb.velocity.magnitude < maxVelocity)
             {
@@ -60,6 +60,7 @@ public class MovingScript : MonoBehaviour
             }
                 
         }
+        groundChecker.IsGrounded = false;
         currentMovement = Vector3.zero;
     }
 }

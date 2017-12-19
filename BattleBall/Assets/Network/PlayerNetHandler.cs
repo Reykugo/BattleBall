@@ -33,19 +33,31 @@ public class PlayerNetHandler {
 
             bool dashing = BitConverter.ToBoolean(buff, 0);
 
-            //Debug.Log("Dashing : " + dashing);
-            float x = 0;
-            float y = 0;
-            float z = 0;
-            float.TryParse(command[2], out x);
-            float.TryParse(command[3], out y);
-            float.TryParse(command[4], out z);
+            byte[] shakingBuff = Encoding.ASCII.GetBytes(command[5]);
 
-            Vector3 acceleration = new Vector3(x,y,z);
-           // Debug.Log("Acceleration" + acceleration);
+            bool shaking = BitConverter.ToBoolean(shakingBuff, 0);
+            if(!shaking)
+            {
+                //Debug.Log("Dashing : " + dashing);
+                float x = 0;
+                float y = 0;
+                float z = 0;
+                float.TryParse(command[2], out x);
+                float.TryParse(command[3], out y);
+                float.TryParse(command[4], out z);
 
-            if (OnMoving != null)
-                OnMoving(acceleration);
+                Vector3 acceleration = new Vector3(x,y,z);
+                if (OnMoving != null)
+                    OnMoving(acceleration);
+            }
+            else
+            {
+                Debug.LogWarning("SHAKING");
+
+
+                //Call shaking;
+            }
+
             if(dashing != isDashing)
             {
                 isDashing = dashing;

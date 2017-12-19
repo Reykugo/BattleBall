@@ -7,12 +7,14 @@ public class InputDebug : MonoBehaviour {
 
     GameUI gameUI;
     public Text dashingState;
+    public Text shakingState;
     public Text accel;
 
 	// Use this for initialization
 	void Start () {
         gameUI = GetComponent<GameUI>();
         gameUI.OnDash += UpdateDashing;
+        gameUI.OnShake += UpdateShaking;
 	}
 	
 	// Update is called once per frame
@@ -23,5 +25,10 @@ public class InputDebug : MonoBehaviour {
     void UpdateDashing(bool dashing)
     {
         dashingState.text = dashing.ToString();
+    }
+
+    void UpdateShaking(bool shaking)
+    {
+        shakingState.text = shaking.ToString();
     }
 }

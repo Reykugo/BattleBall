@@ -4,14 +4,12 @@ using UnityEngine;
 
 public class ItemScript : MonoBehaviour {
 
-    public GameObject[] Powers;
-
-    private GameObject Power;
+    private Power.PowerType powerType;
 
 	// Use this for initialization
 	void Start () {
-        Power = Powers[Random.Range(0, Powers.Length)];
-	}
+        powerType = (Power.PowerType)Random.Range(0, 1);
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -22,8 +20,19 @@ public class ItemScript : MonoBehaviour {
     {
         if(c.tag == "Player")
         {
-            Power = Instantiate(Power);
-            Power.GetComponent<PowerScript>().AssignToPlayer(c.gameObject);
+            switch (powerType)
+            {
+                case Power.PowerType.GAZ:
+                    c.gameObject.AddComponent<GazScript>();
+                    break;
+
+                case Power.PowerType.METAL:
+                    c.gameObject.AddComponent<MetalScript>();
+                    break;
+
+                default:
+                    break;
+            }
             Destroy(gameObject);
         }
     }

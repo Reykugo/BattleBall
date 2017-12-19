@@ -21,8 +21,6 @@ GameObject:
   - component: {fileID: 4938644141049098}
   - component: {fileID: 198190746431260884}
   - component: {fileID: 199366332091556760}
-  - component: {fileID: 114313225582276108}
-  - component: {fileID: 114712864811667242}
   m_Layer: 9
   m_Name: GazParticle
   m_TagString: Untagged
@@ -43,33 +41,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114313225582276108
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1741282583651052}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d264ae2e9610d86428237d8e62c41c39, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObjectToFollow: {fileID: 0}
-  X: 1
-  Y: 1
-  Z: 1
-  Offset: {x: 0, y: 0, z: 0}
---- !u!114 &114712864811667242
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1741282583651052}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f4675512d017ff42b92734d3a72d031, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!198 &198190746431260884
 ParticleSystem:
   m_ObjectHideFlags: 1

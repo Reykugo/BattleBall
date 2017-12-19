@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class IceEffectScript : MonoBehaviour {
 
+
+    public GameObject player;
 	// Use this for initialization
 	void Start () {
 		
@@ -17,16 +19,15 @@ public class IceEffectScript : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "Player")
+        if(other.tag == "Player" && other.gameObject.name != player.name)
         {
             other.GetComponent<Collider>().material.dynamicFriction = 0;
-            //other.GetComponent<Rigidbody>().velocity *= 1.1f;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag == "Player")
+        if (other.tag == "Player" && other.gameObject != player)
         {
             other.GetComponent<Collider>().material.dynamicFriction = 1f;
         }

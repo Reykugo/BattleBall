@@ -19,9 +19,10 @@ public class GenerateIceScript : MonoBehaviour {
         timer += Time.deltaTime;
 		if(timer >= GenerationSpeed && oldGenerationposition != this.transform.position)
         {
-            float playerSize = this.transform.parent.transform.localScale.y; 
+            float playerSize = this.transform.parent.localScale.y; 
             GameObject ice = Instantiate<GameObject>(IcePrefab, new Vector3(this.transform.position.x ,
                 this.transform.position.y  - (playerSize/2), this.transform.position.z), Quaternion.identity);
+            ice.GetComponent<IceEffectScript>().player = this.transform.parent.gameObject;
             oldGenerationposition = this.transform.position;
             Destroy(ice, IceDuration);
             timer = 0;

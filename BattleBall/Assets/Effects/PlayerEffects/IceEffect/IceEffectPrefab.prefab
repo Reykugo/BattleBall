@@ -23,7 +23,6 @@ GameObject:
   - component: {fileID: 114066797021042846}
   - component: {fileID: 199514051819657334}
   - component: {fileID: 136125669916615996}
-  - component: {fileID: 114091249700119832}
   m_Layer: 0
   m_Name: IceEffectPrefab
   m_TagString: Untagged
@@ -55,17 +54,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7556873b2af54e143b2118763f3a48fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114091249700119832
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1760426401663536}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7556873b2af54e143b2118763f3a48fd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  player: {fileID: 0}
 --- !u!136 &136125669916615996
 CapsuleCollider:
   m_ObjectHideFlags: 1

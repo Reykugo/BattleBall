@@ -16,7 +16,7 @@ public class GenerateAreaBasePrefab : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+	    
 	}
 
     IEnumerator GenerateArea()
@@ -28,6 +28,7 @@ public class GenerateAreaBasePrefab : MonoBehaviour {
                 for (int k = 0; k < size.z; k++)
                 {
                     var go = Instantiate(fillBlock, transform);
+                    go.name = "Cube(" + i + "," + j + "," + k + ")";
                     go.transform.localPosition = new Vector3(i, j, k);
                     yield return new WaitForSeconds(0.01f);
                 }

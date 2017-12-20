@@ -55,7 +55,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  iceDuration: 0
+  iceDuration: 1
 --- !u!136 &136125669916615996
 CapsuleCollider:
   m_ObjectHideFlags: 1

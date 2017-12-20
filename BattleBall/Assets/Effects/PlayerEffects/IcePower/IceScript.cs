@@ -14,7 +14,7 @@ public class IceScript : Power {
 
     private Collider PlayerCollider;
 
-    private float Timer = 0;
+    private float timer = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -34,16 +34,15 @@ public class IceScript : Power {
 	
 	// Update is called once per frame
 	void Update () {
-        Timer += Time.deltaTime;
+        timer += Time.deltaTime;
         IceParticles.transform.position = transform.position;
-		if(Timer >= GenerationSpeed && OldGenerationposition != transform.position)
+		if(timer >= GenerationSpeed && OldGenerationposition != transform.position)
         {
             GameObject iceTrail = Instantiate(IceTrail);
             iceTrail.transform.position = transform.position;
-            iceTrail.GetComponent<FieldIceScript>().iceDuration = 1f;
             iceTrail.GetComponent<FieldIceScript>().player = gameObject;
             OldGenerationposition = transform.position;
-            Timer = 0;
+            timer = 0;
         }
 	}
 }

@@ -77,7 +77,6 @@ public class DashSystemScript : MonoBehaviour {
     {
         dashChargerEffect.Stop();
         chargeEffect.Stop();
-        dashEffect.Stop();
     }
 
 

@@ -38,7 +38,6 @@ public class DashScript : MonoBehaviour
     {
         if (!isOnCharge)
         {
-            Debug.Log("OK");
             makeCharge = isDashing;
             StartCoroutine(Charge());
         }

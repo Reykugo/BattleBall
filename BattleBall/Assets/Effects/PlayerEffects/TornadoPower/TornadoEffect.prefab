@@ -115,7 +115,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a436350a5fbc8a4eb0ef8728dd48c9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PowerTime: 5
+  powerName: Tornado
   PullSpeed: 20
+  Player: {fileID: 0}
 --- !u!198 &198443612396044420
 ParticleSystem:
   m_ObjectHideFlags: 1

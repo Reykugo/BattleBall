@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4107920243907480}
   - component: {fileID: 198704396063015092}
   - component: {fileID: 199849248523163648}
+  - component: {fileID: 114531358307248188}
   m_Layer: 0
   m_Name: Confusion
   m_TagString: Untagged
@@ -41,6 +42,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114531358307248188
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1752962257044254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f40b58bd0a12a4f46a806a15693039a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PowerTime: 5
+  powerName: Confusion
 --- !u!198 &198704396063015092
 ParticleSystem:
   m_ObjectHideFlags: 1

@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class Power : MonoBehaviour{
 
     public float PowerTime;
-    public enum PowerType { GAZ, METAL, ICE, LIGHTNING, CONFUSION, LENGTH };
+    public enum PowerType { GAZ, METAL, ICE, LIGHTNING, CONFUSION, TORNADO, LENGTH };
     public string powerName;
 
     protected GameObject player;

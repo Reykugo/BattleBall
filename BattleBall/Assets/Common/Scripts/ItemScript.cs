@@ -7,7 +7,6 @@ public class ItemScript : MonoBehaviour {
 
     private Power.PowerType powerType;
 
-
     public PowerReference[] ListOfPower;
 
     private Dictionary<Power.PowerType, GameObject> powerByType  = new Dictionary<Power.PowerType, GameObject>();

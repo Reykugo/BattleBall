@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TornadoScript : MonoBehaviour {
+public class TornadoScript : Power {
 
 
     public float PullSpeed;
@@ -12,7 +12,7 @@ public class TornadoScript : MonoBehaviour {
     private MovingScript playerMove;
 	// Use this for initialization
 	void Start () {
-		
+        playerMove = player.GetComponent<MovingScript>();
 	}
 	
     void OnTriggerStay(Collider other)
@@ -25,5 +25,6 @@ public class TornadoScript : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         this.transform.position += playerMove.currentDirection * playerMove.speed;
+        this.transform.localEulerAngles = Vector3.zero;
 	}
 }

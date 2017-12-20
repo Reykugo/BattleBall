@@ -14,6 +14,8 @@ public class MovingScript : MonoBehaviour
 
     public float maxVelocity;
 
+    public float movementModifier = 1f;
+
 
     private Vector3 currentMovement = Vector3.zero;
 
@@ -36,6 +38,7 @@ public class MovingScript : MonoBehaviour
         }
 
         currentMovement = new Vector3(movement.x, 0f, movement.y);
+        currentMovement *= movementModifier;
         if (currentMovement != new Vector3(0, 0, 0))
         {
             currentDirection = currentMovement.normalized;

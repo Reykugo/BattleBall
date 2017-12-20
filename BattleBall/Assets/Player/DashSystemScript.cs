@@ -104,17 +104,12 @@ public class DashSystemScript : MonoBehaviour {
         Destroy(currentDashEffect, 1);
     }
 
-
     public void DisabledAllEffects()
     {
         dashChargerEffect.Stop();
         chargeEffect.Stop();
-        dashEffect.Stop();
     }
+
 }
 
 
-    public void DisabledAllEffects()
-    {
-        dashChargerEffect.Stop();
-        chargeEffect.Stop();

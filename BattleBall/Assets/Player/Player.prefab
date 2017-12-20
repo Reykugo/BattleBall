@@ -78,6 +78,8 @@ GameObject:
   - component: {fileID: 114576343465469550}
   - component: {fileID: 114278794317506024}
   - component: {fileID: 108163077805151730}
+  - component: {fileID: 114125781693599022}
+  - component: {fileID: 114988382010539114}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -158,7 +160,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1353640005141478}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 12, y: 0, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 224912626664480744}
@@ -287,6 +289,19 @@ Light:
   m_UseColorTemperature: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+--- !u!114 &114125781693599022
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1353640005141478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f10e261b87d2d04fb08a95964ef570e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  touchKeyCode: 32
+  shakeKeyCode: 13
 --- !u!114 &114174601637478258
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -331,13 +346,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25055d9a6e451ca4ea1a8e36c3ff5d40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  groundChecker: {fileID: 114412842844063274}
   MaxChargePower: 30
   ChargePerSecond: 10
   ChargeDuration: 0.5
-  DashSystem: {fileID: 114493328876780754}
-  IsOnDash: 0
   chargePower: 0
-  groundChecker: {fileID: 114412842844063274}
+  IsOnDash: 0
 --- !u!114 &114345676118621766
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -393,6 +407,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6c82893ab97b05429164e432493b541, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dashScript: {fileID: 114278794317506024}
+  colorUnifier: {fileID: 114988382010539114}
   DashChargerEffect: {fileID: 1029030337180714}
   ChargeEffect: {fileID: 1613112182086606}
   DashEffect: {fileID: 1823046789705124, guid: 70131781964772947bd2606ec2c32cc6, type: 2}
@@ -456,10 +472,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   life: 0
   StunDuration: 2
+  AvatarColor: {r: 1, g: 1, b: 1, a: 1}
   playerIdentity: {fileID: 1840743986344778}
   playerIdentityText: {fileID: 114174601637478258}
   areaConfig: {fileID: 0}
-  AvatarColor: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &114988382010539114
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1353640005141478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb36fce355132a04abf916b7b28e97f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!135 &135050057293447662
 SphereCollider:
   m_ObjectHideFlags: 1

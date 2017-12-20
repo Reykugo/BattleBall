@@ -8,6 +8,7 @@ public class AvatarScript : MonoBehaviour
 {
     public int life = 0;
     public float StunDuration = 2;
+    public Color AvatarColor;
 
     [SerializeField]
     private GameObject playerIdentity;
@@ -17,7 +18,7 @@ public class AvatarScript : MonoBehaviour
 
     private Material playerMaterial;
 
-
+    
     public AreaConfig areaConfig;
     public delegate void AvatarObserver(GameObject avatar);
     public event AvatarObserver OnAvatarDie;
@@ -26,27 +27,64 @@ public class AvatarScript : MonoBehaviour
     private DashScript dashScript;
     private MovingScript movingScript;
 
-    //using for test
-    public Color AvatarColor;
+    private PlayerInputHandler handler;
+    private ColorUnifier colorUnifier;
 
     private void Awake()
     {
-        dashScript = this.GetComponent<DashScript>();
+        colorUnifier = GetComponent<ColorUnifier>();
+        dashScript = GetComponent<DashScript>();
         movingScript = GetComponent<MovingScript>();
-
-        playerMaterial = this.GetComponent<MeshRenderer>().material;
+        playerMaterial = GetComponent<MeshRenderer>().material;
+        handler = GetComponent<PlayerInputHandler>();
     }
     // Use this for initialization
     void Start()
     {
+        colorUnifier.OnColorChanged += (color) =>
+        {
+            //Make all that seek for a color unifier script.
+            playerIdentityText.color = color;
+            playerMaterial.color = color;
+            GetComponent<Light>().color = color;
+        };
+
+        //Subscribe to standard Inputs.
+        handler.OnMoving += OnMoving;
+        handler.OnShaking += OnShaking;
+        handler.OnTouch += OnTouch;
+        handler.OnTouchStarted += OnTouchStarted;
+        handler.OnTouchStopped += OnTouchReleased;
+
+
         SetPlayerColor(AvatarColor);
     }
 
-    public void SetInputHandler(PlayerNetHandler handler) //TODO make it cleaner.
+    private void OnMoving(Vector3 movement)
     {
-        handler.OnMoving += movingScript.SetMovement;
-        handler.DashStarted += dashScript.StartDash;
-        handler.DashStopped += dashScript.StopDash;
+        //Apply moving effect if any..
+        movement *= -1;
+        movingScript.SetMovement(movement);
+    }
+
+    private void OnShaking()
+    {
+        //Call Effect activation if any effect and can be shaking activated.
+    }
+
+    private void OnTouch()
+    {
+        
+    }
+
+    private void OnTouchStarted()
+    {
+        dashScript.StartDash();
+    }
+
+    private void OnTouchReleased()
+    {
+        dashScript.ReleaseDash();
     }
 
     public void SetPlayerName(string name)
@@ -55,12 +93,10 @@ public class AvatarScript : MonoBehaviour
         playerIdentityText.text = name;
     }
 
+    //TODO better to centralize color in a different script. Avoiding AvatarScript to be composed of everything.
     public void  SetPlayerColor(Color color)
     {
-        playerIdentityText.color = color;
-        playerMaterial.color = color;
-        this.GetComponent<Light>().color = color;
-        this.GetComponentInChildren<DashSystemScript>().Init(color);
+        colorUnifier.SetColor(color);
     }
 
     public void PlayerFall()
@@ -100,7 +136,7 @@ public class AvatarScript : MonoBehaviour
 
     public void StunPlayer()
     {
-        this.GetComponent<DashScript>().CancelDash();
+        this.GetComponent<DashScript>().StopDash();
         DisabledPlayerCapacity();
         
         Invoke("EnabledPlayerCapacity", StunDuration);
@@ -108,7 +144,7 @@ public class AvatarScript : MonoBehaviour
 
     public void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.tag == "Stunable" && dashScript.IsOnDash)
+        if(collision.gameObject.tag == "Stunable" && dashScript.IsOnDash)//TODO try to check the current velocity of the player.
         {
             StunPlayer();
         }

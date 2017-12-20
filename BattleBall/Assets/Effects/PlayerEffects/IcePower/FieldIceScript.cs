@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IcePowerScript : MonoBehaviour {
+public class FieldIceScript : MonoBehaviour {
 
 
     public GameObject player;
+
+    public float iceDuration;
+
 	// Use this for initialization
 	void Start () {
+        Destroy(gameObject, iceDuration);
 		
 	}
 	

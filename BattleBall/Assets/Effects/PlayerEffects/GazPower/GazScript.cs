@@ -4,22 +4,29 @@ using UnityEngine;
 
 public class GazScript : Power {
 
-    public GameObject GazParticles;
+    private GameObject GazParticles;
 
-    private GameObject gazParticles;
+    private Collider PlayerCollider;
 
     // Use this for initialization
     void Start()
     {
-        Time = 5f;
-        name = "GAZ";
-        GazParticles = Resources.Load<GameObject>("GazParticle");
-        gazParticles = Instantiate(GazParticles);
+        PowerTime = 5f;
+        StartCoroutine(PowerDuration(PowerTime));
+        powerName = "GAZ";
+        GazParticles = Instantiate(Resources.Load<GameObject>("Gaz"));
+    }
+
+    void OnDestroy()
+    {
+        Destroy(GazParticles);
+        gameObject.layer = 9;
     }
 
     // Update is called once per frame
     void Update()
     {
-        gazParticles.transform.position = transform.position;
+        GazParticles.transform.position = transform.position;
+        gameObject.layer = 8;
     }
 }

@@ -8,7 +8,8 @@ public class ItemScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        powerType = (Power.PowerType)Random.Range(0, 1);
+        //powerType = Power.PowerType.ICE;
+        powerType = (Power.PowerType)Random.Range(0, (int)Power.PowerType.LENGTH);
     }
 	
 	// Update is called once per frame
@@ -24,10 +25,17 @@ public class ItemScript : MonoBehaviour {
             {
                 case Power.PowerType.GAZ:
                     c.gameObject.AddComponent<GazScript>();
+                    Debug.Log("Power : GAZ started");
                     break;
 
                 case Power.PowerType.METAL:
                     c.gameObject.AddComponent<MetalScript>();
+                    Debug.Log("Power : METAL started");
+                    break;
+
+                case Power.PowerType.ICE:
+                    c.gameObject.AddComponent<IceScript>();
+                    Debug.Log("Power : ICE started");
                     break;
 
                 default:

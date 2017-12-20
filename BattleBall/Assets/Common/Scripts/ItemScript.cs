@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,10 +7,19 @@ public class ItemScript : MonoBehaviour {
 
     private Power.PowerType powerType;
 
+
+    public PowerReference[] ListOfPower;
+
+    private Dictionary<Power.PowerType, GameObject> powerByType  = new Dictionary<Power.PowerType, GameObject>();
 	// Use this for initialization
 	void Start () {
-        //powerType = Power.PowerType.ICE;
-        powerType = (Power.PowerType)Random.Range(0, (int)Power.PowerType.LENGTH);
+        //powerType = Power.PowerType.ICE
+        powerType = (Power.PowerType)UnityEngine.Random.Range(0, (int)Power.PowerType.LENGTH);
+        foreach(PowerReference powerRef in ListOfPower)
+        {
+            powerByType[powerRef.power] = powerRef.prefab;
+        }
+        Debug.Log(powerByType);
     }
 	
 	// Update is called once per frame
@@ -17,31 +27,27 @@ public class ItemScript : MonoBehaviour {
 		
 	}
 
+    void AddEffect(GameObject player)
+    {
+        GameObject power = Instantiate(powerByType[powerType]);
+        power.transform.parent = player.transform;
+        power.transform.position = player.transform.position;
+        power.GetComponent<Power>().StartEffect();
+    }
+
     void OnTriggerEnter(Collider c)
     {
         if(c.tag == "Player")
         {
-            switch (powerType)
-            {
-                case Power.PowerType.GAZ:
-                    c.gameObject.AddComponent<GazScript>();
-                    Debug.Log("Power : GAZ started");
-                    break;
-
-                case Power.PowerType.METAL:
-                    c.gameObject.AddComponent<MetalScript>();
-                    Debug.Log("Power : METAL started");
-                    break;
-
-                case Power.PowerType.ICE:
-                    c.gameObject.AddComponent<IceScript>();
-                    Debug.Log("Power : ICE started");
-                    break;
-
-                default:
-                    break;
-            }
+            AddEffect(c.gameObject);
             Destroy(gameObject);
         }
     }
+}
+
+[Serializable]
+public class PowerReference
+{
+    public Power.PowerType power;
+    public GameObject prefab;
 }

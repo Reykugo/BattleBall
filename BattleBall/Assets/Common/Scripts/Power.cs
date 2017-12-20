@@ -4,21 +4,29 @@ using UnityEngine;
 
 public abstract class Power : MonoBehaviour{
 
-    protected float PowerTime;
-    public enum PowerType { GAZ, METAL, ICE, LIGHTNING, LENGTH };
+    public float PowerTime;
+    public enum PowerType { GAZ, METAL, ICE, LIGHTNING, CONFUSION, LENGTH };
     public string powerName;
+
+    protected GameObject player;
 
     // Use this for initialization
     void Start()
     {
-        Debug.Log("StartCoroutine PowerDuration");
-        StartCoroutine(PowerDuration(PowerTime));
+        
     }
 
     // Update is called once per frame
     void Update()
     {
 
+    }
+
+    public void StartEffect()
+    {
+        player = this.transform.parent.gameObject;
+        Debug.Log("StartCoroutine PowerDuration");
+        StartCoroutine(PowerDuration(PowerTime));
     }
 
     public IEnumerator PowerDuration(float timer)
@@ -31,7 +39,7 @@ public abstract class Power : MonoBehaviour{
     public void LosePower()
     {
         Debug.Log("Power : " + powerName + "finnished");
-        Destroy(this);
+        Destroy(this.gameObject);
         
     }
 }

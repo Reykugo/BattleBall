@@ -9,9 +9,6 @@ public class ConfusionScript : Power {
     MovingScript movingScript;
 
 	void Start () {
-        PowerTime = 5f;
-        StartCoroutine(PowerDuration(PowerTime));
-        powerName = "CONFUSION";
 
         movingScript = GetComponentInParent<MovingScript>();
         movingScript.movementModifier = -1f;

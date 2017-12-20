@@ -112,8 +112,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07cabe334b7af9c4e84f45c39f6d3f2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Powers:
-  - {fileID: 1741282583651052, guid: e1f78e4cf0c1a2943b22331e9057006f, type: 2}
+  ListOfPower:
+  - power: 0
+    prefab: {fileID: 1107487078085898, guid: 4d08899e2dda70d4fa955c9bf675e889, type: 2}
 --- !u!136 &136275811314405472
 CapsuleCollider:
   m_ObjectHideFlags: 1

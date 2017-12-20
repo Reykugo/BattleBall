@@ -13,17 +13,15 @@ public class MetalScript : Power {
     void Start()
     {
         PowerTime = 5f;
-        StartCoroutine(PowerDuration(PowerTime));
         powerName = "METAL";
-        baseMaterial = GetComponent<MeshRenderer>().material;
-        MetalMaterial = Resources.Load<Material>("MetalMaterial");
-        GetComponent<MeshRenderer>().material = MetalMaterial;
-        PlayerRigidbody = GetComponent<Rigidbody>();
+        baseMaterial = player.GetComponent<MeshRenderer>().material;
+        player.GetComponent<MeshRenderer>().material = MetalMaterial;
+        PlayerRigidbody = player.GetComponent<Rigidbody>();
     }
 
     void OnDestroy()
     {
-        GetComponent<MeshRenderer>().material = baseMaterial;
+        player.GetComponent<MeshRenderer>().material = baseMaterial;
     }
 	
 	// Update is called once per frame

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LightningScript : MonoBehaviour {
+public class LightningScript : Power {
 
 	// Use this for initialization
 	void Start () {

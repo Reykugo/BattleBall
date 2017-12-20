@@ -6,42 +6,34 @@ public class IceScript : Power {
 
     public float GenerationSpeed;
 
-    private Vector3 OldGenerationposition;
 
-    private GameObject IceParticles;
+    private Vector3 oldGenerationposition;
 
-    private GameObject IceTrail;
+    private GameObject iceParticles;
 
-    private Collider PlayerCollider;
+    private GameObject iceTrail;
+
+    private Collider playerCollider;
 
     private float timer = 0;
 
 	// Use this for initialization
 	void Start () {
-        PowerTime = 5f;
-        StartCoroutine(PowerDuration(PowerTime));
-        powerName = "ICE";
-        GenerationSpeed = 0.1f;
-        IceParticles = Instantiate(Resources.Load<GameObject>("Ice"));
-        IceParticles.transform.localScale = transform.localScale * 2;
-        IceTrail = Resources.Load<GameObject>("IceTrail");
+        this.transform.localScale = player.transform.localScale * 2;
+        iceTrail = Resources.Load<GameObject>("IceTrail");
     }
 
-    void OnDestroy()
-    {
-        Destroy(IceParticles);
-    }
+
 	
 	// Update is called once per frame
 	void Update () {
         timer += Time.deltaTime;
-        IceParticles.transform.position = transform.position;
-		if(timer >= GenerationSpeed && OldGenerationposition != transform.position)
+		if(timer >= GenerationSpeed && oldGenerationposition != player.transform.position)
         {
-            GameObject iceTrail = Instantiate(IceTrail);
-            iceTrail.transform.position = transform.position;
-            iceTrail.GetComponent<FieldIceScript>().player = gameObject;
-            OldGenerationposition = transform.position;
+            GameObject iceT = Instantiate(iceTrail);
+            iceT.transform.position = player.transform.position;
+            iceT.GetComponent<FieldIceScript>().player = player;
+            oldGenerationposition = player.transform.position;
             timer = 0;
         }
 	}

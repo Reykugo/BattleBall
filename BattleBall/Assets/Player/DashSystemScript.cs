@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class DashSystemScript : MonoBehaviour {
 
+    public DashScript dashScript;
+    public ColorUnifier colorUnifier;
 
     public GameObject DashChargerEffect;
     public GameObject ChargeEffect;
@@ -14,21 +16,52 @@ public class DashSystemScript : MonoBehaviour {
     private ParticleSystem dashEffect;
 
     private GameObject currentDashEffect;
+    private Color currentColor;
 
-    private Color playerColor;
-
-    public void Init(Color pColor)
+    public void Awake()
     {
-        playerColor = pColor;
-        var mainDashChargerEffect = dashChargerEffect.main;
-        mainDashChargerEffect.startColor = playerColor;
+        dashChargerEffect = DashChargerEffect.GetComponent<ParticleSystem>();
+        chargeEffect = ChargeEffect.GetComponent<ParticleSystem>();
+    }
+    public void Start()
+    {
+        colorUnifier.OnColorChanged += Init;
+
+        dashScript.OnChargingStarted += (charge) =>
+        {
+            EnableDashChargerEffect(true);
+        };
+        dashScript.OnFullCharge += (charge) => {
+            EnableDashChargerEffect(false);
+            EnableChargeEffect(true);
+        };
+
+        dashScript.OnDashing += (direction) =>
+        {
+            EnableDashChargerEffect(false);
+            EnableChargeEffect(false);
+            if (direction != Vector3.zero)
+            {
+                CreateDashEffect(direction);
+            }
+        };
+
+        dashScript.OnDashEnd += DisabledAllEffects;
+
+        Init(colorUnifier.GetColor());
         dashChargerEffect.Stop();
+        chargeEffect.Stop();
+    }
+
+    public void Init(Color color)
+    {
+        currentColor = color;
+
+        var mainDashChargerEffect = dashChargerEffect.main;
+        mainDashChargerEffect.startColor = color;
 
         var mainChargeEffect = chargeEffect.main;
-        mainChargeEffect.startColor = playerColor;
-        chargeEffect.Stop();
-
-        
+        mainChargeEffect.startColor = color;
     }
 
     public void EnableDashChargerEffect(bool state)
@@ -62,12 +95,11 @@ public class DashSystemScript : MonoBehaviour {
     {
 
         currentDashEffect = Instantiate<GameObject>(DashEffect);
-        currentDashEffect.transform.position = this.transform.position;
+        currentDashEffect.transform.position = transform.position;
         currentDashEffect.transform.rotation = Quaternion.LookRotation(-playerDirection, new Vector3(0.0f, 1.0f, 0.0f));
         dashEffect = currentDashEffect.GetComponent<ParticleSystem>();
         var mainDashEffect = dashEffect.main;
-        mainDashEffect.startColor = playerColor;
-            
+        mainDashEffect.startColor = currentColor;
         dashEffect.Play();
         Destroy(currentDashEffect, 1);
     }
@@ -77,17 +109,12 @@ public class DashSystemScript : MonoBehaviour {
     {
         dashChargerEffect.Stop();
         chargeEffect.Stop();
-    }
-
-
-    // Use this for initialization
-    void Awake () {
-        dashChargerEffect = DashChargerEffect.GetComponent<ParticleSystem>();
-        chargeEffect = ChargeEffect.GetComponent<ParticleSystem>();
-    }
-	
-	// Update is called once per frame
-	void Update () {
-
+        dashEffect.Stop();
     }
 }
+
+
+    public void DisabledAllEffects()
+    {
+        dashChargerEffect.Stop();
+        chargeEffect.Stop();

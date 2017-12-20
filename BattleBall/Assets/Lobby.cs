@@ -17,10 +17,10 @@ public class Lobby : UnDestroyable {
     public enum PLAYERS_ENUM { J1 = 0, J2, J3, J4 }
 
     //Events
-    public delegate void DoorObserver (PlayerScript player, int playerCount);
+    public delegate void DoorObserver (PlayerInfo player, int playerCount);
     public event DoorObserver OnPlayerEnter;
     public event DoorObserver OnPlayerLeave;
-    public delegate void PlayerObserver(PlayerScript player);
+    public delegate void PlayerObserver(PlayerInfo player);
     public event PlayerObserver OnPlayerReady;
 
     //Local data
@@ -61,7 +61,7 @@ public class Lobby : UnDestroyable {
             s.net = net;
             Color[] playerColors = { Color.red, Color.blue, Color.yellow, Color.green };
 
-            var p = go.GetComponent<PlayerScript>();
+            var p = go.GetComponent<PlayerInfo>();
             p.playerColor = playerColors[connectionData.connexionId - 1];
             p.playerConnexion = s;
             p.playerName = "J" + connectionData.connexionId;
@@ -85,7 +85,7 @@ public class Lobby : UnDestroyable {
             netDiscovery.StopBroadcast();
             var go = players[connectionData.ipAddress];
             var s = go.GetComponent<PlayerConnexionScript>();
-            var p = go.GetComponent<PlayerScript>();
+            var p = go.GetComponent<PlayerInfo>();
             //Player asked to reconnect.
             //Update his Color
             s.SendColorUpdate(p.playerColor);
@@ -113,7 +113,7 @@ public class Lobby : UnDestroyable {
             {
                 StartCoroutine(UpdateBroadcastData(lobbyName + ";" + playersCount + "/" + maxPlayers));
                 if (OnPlayerLeave != null)
-                    OnPlayerLeave(p.GetComponent<PlayerScript>(), playersCount);
+                    OnPlayerLeave(p.GetComponent<PlayerInfo>(), playersCount);
                 Destroy(p);
             }
         }
@@ -131,7 +131,7 @@ public class Lobby : UnDestroyable {
 
         foreach (var playerMap in players)
         {
-            if (!playerMap.Value.GetComponent<PlayerScript>().ready)
+            if (!playerMap.Value.GetComponent<PlayerInfo>().ready)
             {
                 run = false;
                 break;
@@ -171,7 +171,7 @@ public class Lobby : UnDestroyable {
         {
             if (players.ContainsKey(connectionData.ipAddress))
             {
-                var p = players[connectionData.ipAddress].GetComponent<PlayerScript>();
+                var p = players[connectionData.ipAddress].GetComponent<PlayerInfo>();
                 p.ready = !p.ready;
                 if (OnPlayerReady != null)
                     OnPlayerReady(p);

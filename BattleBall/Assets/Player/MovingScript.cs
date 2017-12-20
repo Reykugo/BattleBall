@@ -42,14 +42,6 @@ public class MovingScript : MonoBehaviour
         }
     }
 
-    public void Update()
-    {
-        if(currentMovement == Vector3.zero)
-        {
-            SetMovement(new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0f));
-        }
-    }
-
     void FixedUpdate()
     {
         if (groundChecker.IsGrounded)

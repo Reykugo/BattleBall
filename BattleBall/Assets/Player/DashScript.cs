@@ -3,30 +3,27 @@ using System.Collections;
 
 public class DashScript : MonoBehaviour
 {
+    public delegate void ChargeObserver(float CurrentCharge);
+    public event ChargeObserver OnChargingStarted;
+    public event ChargeObserver OnCharging;
+    public event ChargeObserver OnFullCharge;
+    public delegate void Dashing(Vector3 direction);
+    public event Dashing OnDashing;
+    public delegate void State();
+    public event State OnDashEnd;
+
+    public GroundCheckerScript groundChecker;
     public float MaxChargePower = 30;
-
     public float ChargePerSecond = 10;
-
     public float ChargeDuration = 0.5f;
-
-
-    public DashSystemScript DashSystem;
-
-    public bool IsOnDash = false;
-    private bool makeCharge = false;
-    private bool isOnCharge;
-  
     public float chargePower = 0;
 
-
-    private PlayerScript player;
+    public bool IsOnDash = false;
     private MovingScript playerMove;
-    public GroundCheckerScript groundChecker;
-
-
     private Rigidbody rb;
-
-
+    private bool makeCharge = false;
+    private bool isOnCharge = false;
+  
     // Use this for initialization
     void Start()
     {
@@ -34,84 +31,64 @@ public class DashScript : MonoBehaviour
         playerMove= GetComponent<MovingScript>();
     }
 
-    public void StartDash(bool isDashing)
+    public void StartDash()
     {
         if (!isOnCharge)
         {
-            makeCharge = isDashing;
+            makeCharge = true;
             StartCoroutine(Charge());
         }
     }
 
-    public void StopDash(bool isDashing)
+    public void ReleaseDash()
     {
-        makeCharge = isDashing;
+        makeCharge = false;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void StopDash()
     {
-        //Used for testing
-        if (groundChecker.IsGrounded && Input.GetKeyDown("space"))
-        {
-            StartDash(true);
-        }
-
-        //Used for testing
-        if (Input.GetKeyUp("space"))
-        {
-            StopDash(false);
-        }
-        
+        StopAllCoroutines();
+        makeCharge = false;
+        IsOnDash = false;
+        isOnCharge = false;
+        if(OnDashEnd != null)
+            OnDashEnd();
     }
-
-    public void CancelDash()
-    {
-        if (makeCharge)
-        {
-            StopAllCoroutines();
-            makeCharge = false;
-            IsOnDash = false;
-            isOnCharge = false;
-            DashSystem.DisabledAllEffects();
-            
-        }
-    }
-
-
 
     IEnumerator Charge()
     {
         isOnCharge = true;
         chargePower = 0;
 
-        DashSystem.EnableDashChargerEffect(true);
+        if (OnChargingStarted != null) 
+            OnChargingStarted(chargePower);
+
         while (makeCharge)
         {
             if (chargePower <= MaxChargePower)
             {
                 chargePower += ChargePerSecond / 4;
                 rb.velocity = Vector3.Lerp(rb.velocity, new Vector3(0, 0, 0), 0.1f);
-                //DashSystem.DashChargerEffect.transform.eulerAngles = new Vector3(0, 0, 0);
+                if(OnCharging != null)
+                {
+                    OnCharging(chargePower);
+                }
             }
             else
             {
-                DashSystem.EnableDashChargerEffect(false);
-                DashSystem.EnableChargeEffect(true);               
-
+                if(OnFullCharge != null)
+                {
+                    OnFullCharge(MaxChargePower);
+                }
             }
             yield return new WaitForSeconds(0.25f);
 
         }
-        DashSystem.EnableDashChargerEffect(false);
-        DashSystem.EnableChargeEffect(false);
-        Vector3 normalizedVelocity = playerMove.currentDirection;
-        if (playerMove.currentDirection != Vector3.zero)
-        {
-            DashSystem.CreateDashEffect(playerMove.currentDirection);
-        }
-        
         IsOnDash = true;
+        Vector3 normalizedVelocity = playerMove.currentDirection;
+        if(OnDashing != null)
+            OnDashing(normalizedVelocity);
+        
         rb.AddForce(normalizedVelocity * chargePower, ForceMode.Impulse);
 
         yield return new WaitForSeconds(ChargeDuration);
@@ -122,7 +99,6 @@ public class DashScript : MonoBehaviour
 
         }
 
-        IsOnDash = false;
-        isOnCharge = false;
+        StopDash();
     }
 }

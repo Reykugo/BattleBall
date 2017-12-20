@@ -16,7 +16,7 @@ public class LobbyUI : MonoBehaviour {
         lobby.OnPlayerReady += SetReadyLayout;
 	}
 
-    void SetPlayerLayout(PlayerScript playerData, int playerCount)
+    void SetPlayerLayout(PlayerInfo playerData, int playerCount)
     {
         var image = playersUI[(int)playerData.playerEnum].GetComponentInChildren<Image>();
         image.color = playerData.playerColor;
@@ -26,7 +26,7 @@ public class LobbyUI : MonoBehaviour {
         playersUI[(int)playerData.playerEnum].GetComponentInChildren<Text>().text = playerData.playerName + " - " + playerData.playerConnexion.clientData.ipAddress;
     }
 
-    void SetReadyLayout(PlayerScript playerData)
+    void SetReadyLayout(PlayerInfo playerData)
     {
         //Tmp change message
         if (playerData.ready)
@@ -40,7 +40,7 @@ public class LobbyUI : MonoBehaviour {
         //TODO Add Ready Icon;
     }
 
-    void SetWaitingLayout(PlayerScript playerData, int playerCount)
+    void SetWaitingLayout(PlayerInfo playerData, int playerCount)
     {
         var image = playersUI[(int)playerData.playerEnum].GetComponentInChildren<Image>();
         image.color = new Color(57f / 255f, 57f / 255f, 57f / 255f);

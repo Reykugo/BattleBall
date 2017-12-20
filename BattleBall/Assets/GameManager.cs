@@ -13,36 +13,36 @@ public class GameManager : MonoBehaviour
     public int GameDuration;
     public int StartingLife;
 
-    public List<GameObject> players{
+    public List<GameObject> players {
         get;
         set;
-     }
+    }
 
     private List<GameObject> avatars;//Object
-   
+
     private AreaConfig areaConfig; //TerrainConfiguration (spawners...)
     public PopUp reconnectPopUp;
     void Start()
     {
-        
+
         avatars = new List<GameObject>();
         SceneManager.sceneLoaded += OnTerrainLoaded;
     }
 
-    
+
     private void OnTerrainLoaded(Scene scene, LoadSceneMode mode)
     {
-        if(scene.buildIndex == 1) //==Lobby
+        if (scene.buildIndex == 1) //==Lobby
         {
-            
+
 
         }
-        else if(scene.buildIndex >= 2)//We are loading a game;
+        else if (scene.buildIndex >= 2)//We are loading a game;
         {
             areaConfig = GameObject.Find("Area").GetComponent<AreaConfig>();
             if (areaConfig.spawners.Count < players.Count)
                 return;//Error too much players for the spawners;
-            GeneratePlayers();
+            GenerateAvatars();
         }
     }
     public void PlayerReconnected(NetworkScript.ConnectionData connectionData)
@@ -84,7 +84,7 @@ public class GameManager : MonoBehaviour
 
     void PlayerWin(GameObject avatar)
     {
-        Debug.Log(avatar.GetComponent<PlayerScript>().playerName);
+        Debug.Log(avatar.GetComponent<PlayerInfo>().playerName);
 
         //TODO Be able to restart a new fresh game from the lobby
 
@@ -96,26 +96,28 @@ public class GameManager : MonoBehaviour
         players.Clear();
     }
 
-    private void GeneratePlayers()
+    private void GenerateAvatars()
     {
         var spawners = areaConfig.spawners;
-        
-        foreach(var p in players)
+
+        foreach (var p in players)
         {
-            PlayerScript playerScript = p.GetComponent<PlayerScript>();
-            
             Transform spawner = spawners[Random.Range(0, spawners.Count)];
-            GameObject avatar = Instantiate(avatarPrefab);
-            AvatarScript avatarConf = avatar.GetComponent<AvatarScript>();
-
-            avatar.transform.position = spawner.position;
-            avatarConf.OnAvatarDie += PlayerIsDead;//TODO in playerScript.
-            avatarConf.areaConfig = areaConfig;
-
-            playerScript.SetUpAvatar(avatar);
-
+            GameObject avatar = Instantiate(avatarPrefab, spawner.position, Quaternion.identity);
             avatars.Add(avatar);
             spawners.Remove(spawner);
+
+            PlayerInfo playerScript = p.GetComponent<PlayerInfo>();
+            //Setting up avatar
+            AvatarScript avatarScript = avatar.GetComponent<AvatarScript>();
+            avatarScript.OnAvatarDie += PlayerIsDead;
+            avatarScript.areaConfig = areaConfig;
+            avatarScript.AvatarColor = playerScript.playerColor;
+            avatarScript.SetPlayerColor(playerScript.playerColor);
+            avatarScript.SetPlayerName(playerScript.playerName);
+            //Setting up avatar inputs.
+            PlayerInputHandler inputHandler = avatar.GetComponent<PlayerInputHandler>();
+            inputHandler.InitNet(playerScript.playerConnexion);
         }
     }
 }

@@ -7,7 +7,6 @@ using System;
 public class AvatarScript : MonoBehaviour
 {
     public int life = 0;
-    public float StunDuration = 2;
     public Color AvatarColor;
 
     [SerializeField]
@@ -30,8 +29,16 @@ public class AvatarScript : MonoBehaviour
     private PlayerInputHandler handler;
     private ColorUnifier colorUnifier;
 
+
+    //Stun TODO move.
+    private Rigidbody rb;
+    public float stunDuration = 2;
+    public int stunTreshold = 10;
+    //End stun
+
     private void Awake()
     {
+        rb = GetComponent<Rigidbody>();
         colorUnifier = GetComponent<ColorUnifier>();
         dashScript = GetComponent<DashScript>();
         movingScript = GetComponent<MovingScript>();
@@ -43,7 +50,6 @@ public class AvatarScript : MonoBehaviour
     {
         colorUnifier.OnColorChanged += (color) =>
         {
-            //Make all that seek for a color unifier script.
             playerIdentityText.color = color;
             playerMaterial.color = color;
             GetComponent<Light>().color = color;
@@ -62,8 +68,6 @@ public class AvatarScript : MonoBehaviour
 
     private void OnMoving(Vector3 movement)
     {
-        //Apply moving effect if any..
-        movement *= -1;
         movingScript.SetMovement(movement);
     }
 
@@ -112,17 +116,14 @@ public class AvatarScript : MonoBehaviour
 
     public void PlayerRespawn()
     {
-        this.transform.position = areaConfig.RespawnPoint.position;
+        transform.position = areaConfig.RespawnPoint.position;
     }
 
-
-    //Move in a stunOnCollideScript;
     public void SetPlayerCapacityState(bool state = true)
     {
-        this.GetComponent<MovingScript>().enabled = state;
-        this.GetComponent<DashScript>().enabled = state;
-        this.GetComponent<Light>().enabled = state;
-
+        GetComponent<MovingScript>().enabled = state;
+        GetComponent<DashScript>().enabled = state;
+        GetComponent<Light>().enabled = state;
     }
 
     public void DisabledPlayerCapacity()
@@ -136,16 +137,22 @@ public class AvatarScript : MonoBehaviour
 
     public void StunPlayer()
     {
-        this.GetComponent<DashScript>().StopDash();
+        GetComponent<DashScript>().StopDash();//Better to react on the state change.
         DisabledPlayerCapacity();
-        
-        Invoke("EnabledPlayerCapacity", StunDuration);
+        //Todo use modular stun duration.
+        Invoke("EnabledPlayerCapacity", stunDuration);
     }
 
     public void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.tag == "Stunable" && dashScript.IsOnDash)//TODO try to check the current velocity of the player.
+        //If the magnitude of the collider is greater than the treshold we stun the IStunnable;
+        var collRb = collision.gameObject.GetComponent<Rigidbody>();
+        Debug.LogWarning("Collide with " + collision.gameObject.tag + " : " + collision.gameObject.name);
+        Debug.LogWarning("Magnitude" + rb.velocity.magnitude);
+        if (collision.gameObject.tag == "Stunable" && rb.velocity.magnitude > stunTreshold ///Wall Case TODO better to compute stunDuration based on force when colliding.
+            || collision.gameObject.tag == "Player" && rb.velocity.magnitude > stunTreshold && rb.velocity.magnitude >= collRb.velocity.magnitude)//Player Case
         {
+            Debug.Log("Stunned");
             StunPlayer();
         }
     }

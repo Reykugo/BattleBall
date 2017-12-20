@@ -12,9 +12,9 @@ public class ColorUnifier : MonoBehaviour {
 
     public void SetColor(Color color)
     {
-        _Color = color;
         if(color != _Color && OnColorChanged != null)
         {
+            _Color = color;
             OnColorChanged(color);
         }
     }

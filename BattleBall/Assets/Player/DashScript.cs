@@ -18,6 +18,7 @@ public class DashScript : MonoBehaviour
   
     public float chargePower = 0;
 
+
     private PlayerScript player;
     private MovingScript playerMove;
     public GroundCheckerScript groundChecker;
@@ -37,6 +38,7 @@ public class DashScript : MonoBehaviour
     {
         if (!isOnCharge)
         {
+            Debug.Log("OK");
             makeCharge = isDashing;
             StartCoroutine(Charge());
         }
@@ -62,6 +64,19 @@ public class DashScript : MonoBehaviour
             StopDash(false);
         }
         
+    }
+
+    public void CancelDash()
+    {
+        if (makeCharge)
+        {
+            StopAllCoroutines();
+            makeCharge = false;
+            IsOnDash = false;
+            isOnCharge = false;
+            DashSystem.DisabledAllEffects();
+            
+        }
     }
 
 

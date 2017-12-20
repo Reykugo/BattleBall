@@ -100,7 +100,9 @@ public class AvatarScript : MonoBehaviour
 
     public void StunPlayer()
     {
+        this.GetComponent<DashScript>().CancelDash();
         DisabledPlayerCapacity();
+        
         Invoke("EnabledPlayerCapacity", StunDuration);
     }
 

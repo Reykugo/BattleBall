@@ -73,6 +73,13 @@ public class DashSystemScript : MonoBehaviour {
     }
 
 
+    public void DisabledAllEffects()
+    {
+        dashChargerEffect.Stop();
+        chargeEffect.Stop();
+        dashEffect.Stop();
+    }
+
 
     // Use this for initialization
     void Awake () {

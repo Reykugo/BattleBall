@@ -88,8 +88,6 @@ namespace Network
                         case NetworkEventType.Nothing:         //3
                             break;
                         case NetworkEventType.DisconnectEvent:
-                            Debug.Log("My host/connexionid " + hostId + "" + connectionId);
-                            Debug.Log("disconect from : " + remoteHostId + "" + receivedConnectionId);
                             Disconnect();//No more server the game has ended abruptly redirect to the game select. Or we wanted to quit the app.
                             break;
                         case NetworkEventType.ConnectEvent:
@@ -308,9 +306,9 @@ namespace Network
           
             //Int32 size == 4 bytes;
             Color c = Color.black;
-            c.r = BitConverter.ToInt32(data,0) / 255.0f;
-            c.g = BitConverter.ToInt32(data, 4) / 255.0f;
-            c.b = BitConverter.ToInt32(data, 8) / 255.0f;
+            c.r = BitConverter.ToSingle(data,0) / 255.0f;
+            c.g = BitConverter.ToSingle(data, 4) / 255.0f;
+            c.b = BitConverter.ToSingle(data, 8) / 255.0f;
             c.a = 1f;
 
             return c;

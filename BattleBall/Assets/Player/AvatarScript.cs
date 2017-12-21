@@ -111,11 +111,15 @@ public class AvatarScript : MonoBehaviour
     {
         print("fall");
         life -= 1;
-        if (life == 0 && OnAvatarDie != null)
+        if (life > 0)
         {
-            OnAvatarDie(this.gameObject);
+            Invoke("PlayerRespawn", 3);
         }
-        Invoke("PlayerRespawn", 3);
+        else
+        {
+            if(OnAvatarDie != null)
+                OnAvatarDie(gameObject);
+        } 
     }
 
     public void PlayerRespawn()

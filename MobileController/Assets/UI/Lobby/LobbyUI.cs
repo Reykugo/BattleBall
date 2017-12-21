@@ -79,7 +79,10 @@ public class LobbyUI : FlowStep {
         var command = data.Split(";".ToCharArray());
         if (command[0] == START_GAME)
         {
-            gameStateManager.TransitToGame(playerColor);
+            ready = false;
+            int startingLifes = BitConverter.ToInt32(Encoding.ASCII.GetBytes(command[1]), 0);
+            Debug.Log(startingLifes);
+            gameStateManager.TransitToGame(playerColor, startingLifes);
         }
         else if(command[0] == PLAYER_UPDATE)
         {

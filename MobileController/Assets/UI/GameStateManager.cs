@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GameStateManager : MonoBehaviour {
+public class GameStateManager : MonoBehaviour
+{
     //Transit from => to
     //gameSelection => Lobby
     //Lobby => Game
@@ -22,18 +23,22 @@ public class GameStateManager : MonoBehaviour {
     private GameSelectionUI gameSelection;
     private LobbyUI lobby;
     private GameUI game;
+    private EndGameUI EndGame;
 
     private FlowStep current;
 
-    
-	// Use this for initialization
-	void Start () {
+
+    // Use this for initialization
+    void Start()
+    {
         gameSelection = GetComponentInChildren<GameSelectionUI>();
         lobby = GetComponentInChildren<LobbyUI>();
         game = GetComponentInChildren<GameUI>();
+        EndGame = GetComponentInChildren<EndGameUI>();
         current = gameSelection;
         lobby.gameObject.SetActive(false);
         game.gameObject.SetActive(false);
+        EndGame.gameObject.SetActive(false);
 
     }
 
@@ -47,12 +52,13 @@ public class GameStateManager : MonoBehaviour {
 
     }
 
-    public void TransitToGame(Color color)
+    public void TransitToGame(Color color, int startingLifes)
     {
         current.gameObject.SetActive(false);
+        game.GetComponentInChildren<Image>().color = color;
+        game.SetLifes(startingLifes);
         game.Show();//TODO move show in flowStep;
         current = game;
-        game.GetComponentInChildren<Image>().color = color;
     }
 
     public void TransitToGameSelection()
@@ -61,6 +67,17 @@ public class GameStateManager : MonoBehaviour {
         gameSelection.gameObject.SetActive(true);
         current = gameSelection;
         //TODO networkClientScript.Disconnect();
+        Screen.sleepTimeout = SleepTimeout.SystemSetting;
+    }
+
+    public void TransitToEndGame(bool winnerflag)
+    {
+        current.gameObject.SetActive(false);
+        EndGame.SetState(winnerflag);
+
+        EndGame.gameObject.SetActive(true);
+        current = EndGame;
+
         Screen.sleepTimeout = SleepTimeout.SystemSetting;
     }
 }

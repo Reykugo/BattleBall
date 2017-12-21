@@ -109,8 +109,9 @@ public class AvatarScript : MonoBehaviour
 
     public void PlayerFall()
     {
-        print("fall");
         life -= 1;
+        if(OnAvatarFall != null)
+            OnAvatarFall(gameObject);
         if (life > 0)
         {
             Invoke("PlayerRespawn", 3);

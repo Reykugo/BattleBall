@@ -189,6 +189,7 @@ public class GameManager : MonoBehaviour
             avatarScript.SetPlayerColor(playerScript.playerColor);
             avatarScript.SetPlayerName(playerScript.playerName);
 
+            playerScript.SetUp(avatar);
             avatarScript.OnAvatarDie += PlayerIsDead;
             //Setting up avatar inputs.
             PlayerInputHandler inputHandler = avatar.GetComponent<PlayerInputHandler>();

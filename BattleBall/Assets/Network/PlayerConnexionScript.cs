@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -17,7 +18,6 @@ public class PlayerConnexionScript : MonoBehaviour {
 
     private byte[] receivedBuff = new byte[1024];
     private int channelId;
-    private int connectionId;
     private float disconnectTimer = 0f;
     private bool connected = true;
    
@@ -63,10 +63,9 @@ public class PlayerConnexionScript : MonoBehaviour {
         Send(colorCommand);
     }
 
-    public void SendStartGame()
+    public void SendStartGame(int lifes)
     {
-        Send("StartGame;");
-        //StartCoroutine(NetGameHandler());
+        Send("StartGame;" + Encoding.ASCII.GetString(BitConverter.GetBytes(lifes)) + ";");
     }
 
     public void SendEndGame(bool winner)
@@ -74,6 +73,21 @@ public class PlayerConnexionScript : MonoBehaviour {
         var winState = (winner) ? "Win" : "Loose";
         Debug.Log("player " + clientData.ipAddress + winState);
         Send("EndGame;" + winState + ";");
+    }
+
+    public void SendGoToLobby()
+    {
+        Send("GoToLobby;");
+    }
+
+    public void SendAvatarDead()
+    {
+        Send("AvatarDied;");
+    }
+
+    public void SendAvatarFall()
+    {
+        Send("AvatarFelt;");
     }
 
     private void Send(string message)

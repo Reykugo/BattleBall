@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class GameUI : FlowStep {
 
@@ -29,11 +30,14 @@ public class GameUI : FlowStep {
     float lowPassKernelWidthInSeconds = 1.0f;
     // This next parameter is initialized to 2.0 per Apple's recommendation,
     // or at least according to Brady! ;)
-    float shakeDetectionThreshold = 2.0f;
+    float shakeDetectionThreshold = 1.5f;
 
     float lowPassFilterFactor;
     Vector3 lowPassValue;
     bool shaking = false;
+    int _lifes;
+
+    public Text lifesText;
 
     void Start()
     {
@@ -41,17 +45,10 @@ public class GameUI : FlowStep {
         net.OnMessageReceived += ParseServerMessage;
         net.OnConnect += OnReconnect;
         net.OnDisconnect += OnDisconnect;
-        OnDash += DashHandler;
+
         lowPassFilterFactor = accelerometerUpdateInterval / lowPassKernelWidthInSeconds;
         shakeDetectionThreshold *= shakeDetectionThreshold;
         lowPassValue = Input.acceleration;
-    }
-
-
-
-    void Update()
-    {
-       
     }
 
 
@@ -66,6 +63,15 @@ public class GameUI : FlowStep {
 
     void Disable()
     {
+        net.OnConnect -= OnReconnect;
+        net.OnDisconnect -= OnDisconnect;
+        net.OnMessageReceived -= ParseServerMessage;
+    }
+
+    public void SetLifes(int lifes)
+    {
+        _lifes = lifes;
+        lifesText.text = "x"+_lifes;
     }
 
     void OnReconnect()
@@ -136,23 +142,49 @@ public class GameUI : FlowStep {
         }
     }
 
-    void DashHandler(bool isLoading)
-    {
-    }
     void ParseServerMessage(string data)
     {
         var command = data.Split(";".ToCharArray());
-        if (command[0] == "GameState")
+        Debug.Log(command);
+        if (command[0] == "EndGame")
         {
             //TODO Transit to results screen
+            bool state = false;
             if (command[1] == "Win")
             {
+                state = true;
             }
             else if(command[1] == "Loose")
             {
+                state = false;
             }
-            gameStateManager.TransitToLobby();
+            gameStateManager.TransitToEndGame(state);
         }
+        else if (command[0] == "AvatarCollide")
+        {
+            StartCoroutine(VibrateFor(seconds: 1f));
+        }
+        else if (command[0] == "AvatarFelt")
+        {
+            _lifes--;
+            SetLifes(_lifes);
+            gameStateManager.StartCoroutine(VibrateFor(seconds: 1f));
+        }
+        else if(command[0] == "AvatarDied")
+        {
+            gameStateManager.StartCoroutine(VibrateFor(seconds: 2f));
+        }
+    }
+
+    IEnumerator VibrateFor(float seconds)
+    {
+        for(float t= 0f; t< seconds; t += Time.deltaTime)
+        {
+            Handheld.Vibrate();
+
+            yield return null;
+        }
+
     }
 
 }

@@ -11,5 +11,24 @@ public class PlayerInfo : MonoBehaviour {
     public Lobby.PLAYERS_ENUM playerEnum;
 
     public PlayerConnexionScript playerConnexion;
+    public GameObject avatar;
     public bool ready;//TODO move outside;
+
+    public void SetUp(GameObject avatar)
+    {
+        var avatarScript = avatar.GetComponent<AvatarScript>();
+        avatarScript.OnAvatarFall += SendAvatarFall;
+        avatarScript.OnAvatarDie += SendAvatarDead;
+    }
+
+    public void SendAvatarFall(GameObject avatar)
+    {
+        playerConnexion.SendAvatarFall();
+    }
+
+    public void SendAvatarDead(GameObject avatar)
+    {
+        playerConnexion.SendAvatarDead();
+    }
+
 }

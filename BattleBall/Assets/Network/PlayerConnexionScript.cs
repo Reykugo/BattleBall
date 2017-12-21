@@ -68,6 +68,14 @@ public class PlayerConnexionScript : MonoBehaviour {
         Send("StartGame;");
         //StartCoroutine(NetGameHandler());
     }
+
+    public void SendEndGame(bool winner)
+    {
+        var winState = (winner) ? "Win" : "Loose";
+        Debug.Log("player " + clientData.ipAddress + winState);
+        Send("EndGame;" + winState + ";");
+    }
+
     private void Send(string message)
     {
         byte error;

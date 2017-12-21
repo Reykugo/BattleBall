@@ -26,16 +26,16 @@ public class GameManager : MonoBehaviour
     public int GameDuration;
     public int StartingLife;
 
-    public List<GameObject> players {
-        get;
-        set;
-    }
+    public List<GameObject> players = new List<GameObject>();
 
     public List<GameObject> avatars;//Object
 
     private AreaConfig areaConfig; //TerrainConfiguration (spawners...)
     private List<PlayerInfo> disconnectedPlayers = new List<PlayerInfo>();
     public PopUp reconnectPopUp;
+
+    public bool gameStarted;
+
     void Start()
     {
         //For editor use.
@@ -43,21 +43,32 @@ public class GameManager : MonoBehaviour
         {
             powerByType.Add(power.power, power.prefab);
         }
+        
         SceneManager.sceneLoaded += OnTerrainLoaded;
     }
 
 
     private void OnTerrainLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.buildIndex == 1) //==Lobby
+        if (scene.buildIndex == 2) //==Lobby
         {
             //Unload 
+            foreach(var player in players)
+            {
+                if(player)
+                    player.GetComponent<PlayerConnexionScript>().SendGoToLobby();
+            }
+
+            gameStarted = false;
             powerByType.Clear();
             avatars.Clear();
+            players.Clear();
             areaConfig = null;
         }
-        else if (scene.buildIndex >= 2)//We are loading a game;
+        else if (scene.buildIndex >= 4)//We are loading a game;
         {
+            powerByType.Clear();
+            gameStarted = true;
             areaConfig = GameObject.Find("Area").GetComponent<AreaConfig>();
             if (areaConfig.spawners.Count < players.Count)
                 return;//Error too much players for the spawners
@@ -102,9 +113,9 @@ public class GameManager : MonoBehaviour
             str += " ";
             str += p.playerName;
         }
-        str += "ha";
+        str += " ha";
         str += (disconnectedPlayers.Count > 1) ? "ve" : "s";
-        str += "disconnected";
+        str += " disconnected";
         reconnectPopUp.UpdateTitle(str);
 
         if(disconnectedPlayers.Count == 1)
@@ -141,16 +152,21 @@ public class GameManager : MonoBehaviour
 
     void PlayerWin(GameObject avatar)
     {
-        Debug.Log(avatar.GetComponent<PlayerInfo>().playerName);
-
-        //TODO Be able to restart a new fresh game from the lobby
-
-        OnLeaving();
-    }
-
-    void OnLeaving()
-    {
-        players.Clear();
+        foreach (var p in players)
+        {
+            var pScript = p.GetComponent<PlayerInfo>();
+            pScript.ready = false;
+            if (pScript.avatar != null && avatar == pScript.avatar)
+            {
+                pScript.playerConnexion.SendEndGame(true);
+            }
+            else
+            {
+                pScript.playerConnexion.SendEndGame(false);
+            }
+        }
+        gameStarted = false;
+        SceneManager.LoadScene(3);//TODO make it load the endGameScene.
     }
 
     private void GenerateAvatars()
@@ -167,11 +183,13 @@ public class GameManager : MonoBehaviour
             PlayerInfo playerScript = p.GetComponent<PlayerInfo>();
             //Setting up avatar
             AvatarScript avatarScript = avatar.GetComponent<AvatarScript>();
-            avatarScript.OnAvatarDie += PlayerIsDead;
+            avatarScript.life = StartingLife;
             avatarScript.areaConfig = areaConfig;
             avatarScript.AvatarColor = playerScript.playerColor;
             avatarScript.SetPlayerColor(playerScript.playerColor);
             avatarScript.SetPlayerName(playerScript.playerName);
+
+            avatarScript.OnAvatarDie += PlayerIsDead;
             //Setting up avatar inputs.
             PlayerInputHandler inputHandler = avatar.GetComponent<PlayerInputHandler>();
             inputHandler.InitNet(playerScript.playerConnexion);

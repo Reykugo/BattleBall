@@ -29,7 +29,6 @@ public class Lobby : UnDestroyable {
     private List<GameObject> disconnectedPlayers = new List<GameObject>();
 
     public int playersCount = 0;//Todo use get/set restrictions;
-    private bool InGame = false;
 
     private GameManager gameManager;
 
@@ -49,7 +48,7 @@ public class Lobby : UnDestroyable {
 
     void CreatePlayer(NetworkScript.ConnectionData connectionData)
     {
-        if (players.Count == maxPlayers && !InGame)
+        if (players.Count == maxPlayers && !gameManager.gameStarted)
             return;
 
 
@@ -81,7 +80,7 @@ public class Lobby : UnDestroyable {
             if (OnPlayerEnter != null)
                 OnPlayerEnter(p, playersCount);
         }
-        else if (InGame && players.ContainsKey(connectionData.ipAddress))
+        else if (gameManager.gameStarted && players.ContainsKey(connectionData.ipAddress))
         {
             var go = players[connectionData.ipAddress];
             disconnectedPlayers.Remove(go);
@@ -99,7 +98,7 @@ public class Lobby : UnDestroyable {
             //Player asked to reconnect.
             //Update his Color
             s.SendColorUpdate(p.playerColor);//Be sure that is appropriate color.
-            s.SendStartGame();//If needed, might be ignored by the client.
+            s.SendStartGame(gameManager.StartingLife);//If needed, might be ignored by the client.
             //SendHim
             gameManager.PlayerReconnected(p);
         }
@@ -107,7 +106,7 @@ public class Lobby : UnDestroyable {
 
     void DestroyPlayer(NetworkScript.ConnectionData connectionData)
     {
-        if(InGame && players.ContainsKey(connectionData.ipAddress))
+        if(gameManager.gameStarted && players.ContainsKey(connectionData.ipAddress))
         {
             //PlayerDisconnected after game started.
             disconnectedPlayers.Add(players[connectionData.ipAddress]);
@@ -120,7 +119,7 @@ public class Lobby : UnDestroyable {
             }
             gameManager.PlayerDisconnected(p);
         }
-        else if( !InGame && players.ContainsKey(connectionData.ipAddress))
+        else if( !gameManager.gameStarted && players.ContainsKey(connectionData.ipAddress))
         {
             GameObject p = players[connectionData.ipAddress];
             players.Remove(connectionData.ipAddress);
@@ -137,6 +136,21 @@ public class Lobby : UnDestroyable {
         {
             Debug.Log("Player already disconnected error");
         }
+    }
+
+    public List<PlayerInfo> GetPlayerInfos()
+    {
+        List<PlayerInfo> playerInfos = new List<PlayerInfo>();
+        if (players.Count > 0)
+        {
+            var vals = players.Values;
+            foreach (var v in vals)
+            {
+                playerInfos.Add(v.GetComponent<PlayerInfo>());
+            }
+        }
+
+        return playerInfos;
     }
 
     public void LoadSceneByIndexIfReady(int index)
@@ -159,21 +173,18 @@ public class Lobby : UnDestroyable {
             List<GameObject> playersGO = new List<GameObject>(players.Values);
             foreach(var player in playersGO)
             {
-                player.GetComponent<PlayerConnexionScript>().SendStartGame();
+                player.GetComponent<PlayerConnexionScript>().SendStartGame(gameManager.StartingLife);
             }
             gameManager.players = playersGO;
-            netDiscovery.StopBroadcast();
+            if(netDiscovery.running)
+                netDiscovery.StopBroadcast();
             SceneManager.LoadScene(index);
-            //Unsubscribe to networkEvent;
-            InGame = true;//TODO state;
         }
         else
         {
             //Players are not ready. Fade.DisplayError;
         }
-    }
-
-    //TODO refactor 
+    } 
 
     void DispatchToPlayer(NetworkScript.ConnectionData connectionData, string buffer)
     {
@@ -183,7 +194,7 @@ public class Lobby : UnDestroyable {
     void ParseMessage(NetworkScript.ConnectionData connectionData, string buffer)
     {
         string[] command = buffer.Split(";".ToCharArray());
-        if (command[0] == "Ready" && !InGame)
+        if (command[0] == "Ready" && !gameManager.gameStarted)
         {
             if (players.ContainsKey(connectionData.ipAddress))
             {
@@ -220,7 +231,7 @@ public class Lobby : UnDestroyable {
         if(!netDiscovery.running)
             netDiscovery.StartAsServer();
         yield return new WaitForSeconds(0.5f);
-        if (playersCount == maxPlayers || InGame)
+        if (playersCount == maxPlayers || gameManager.gameStarted)
         {
             netDiscovery.StopBroadcast();
         }

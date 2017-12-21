@@ -12,8 +12,6 @@ public class MetalScript : Power {
     // Use this for initialization
     void Start()
     {
-        PowerTime = 5f;
-        powerName = "METAL";
         baseMaterial = player.GetComponent<MeshRenderer>().material;
         player.GetComponent<MeshRenderer>().material = MetalMaterial;
         PlayerRigidbody = player.GetComponent<Rigidbody>();

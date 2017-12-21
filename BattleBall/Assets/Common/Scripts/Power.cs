@@ -6,7 +6,7 @@ public abstract class Power : MonoBehaviour{
 
     public float PowerTime;
 
-    public enum PowerType { GAZ, METAL, ICE, LIGHTNING, CONFUSION, TORNADO, LENGTH };
+    public enum PowerType { GAZ, METAL, ICE, LIGHTNING, CONFUSION, TORNADO, EXPLOSION, LENGTH };
     public enum PowerTarget { ALL, SELF, OTHERS }
     public enum PowerActivator { AUTOMATIC, MANUAL }
 

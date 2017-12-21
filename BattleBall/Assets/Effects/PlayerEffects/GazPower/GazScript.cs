@@ -11,6 +11,7 @@ public class GazScript : Power {
     // Use this for initialization
     void Start()
     {
+
     }
 
     void OnDestroy()

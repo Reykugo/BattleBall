@@ -87,7 +87,6 @@ public class NetworkScript : MonoBehaviour {
                 if (OnMessage != null)
                 {
                     var data = Encoding.ASCII.GetString(buffer);
-                    
                     OnMessage(clients[hConnectionId], data);
                 }
                 break;
@@ -113,7 +112,6 @@ public class NetworkScript : MonoBehaviour {
             ConnectionData clientData = new ConnectionData();
             clientData.connexionId = receivedConnectionId;
             clientData.hostId = receivedHostId;
-            Debug.Log(clientData.hostId);
 
             NetworkID networkId;
             NodeID dstNode;

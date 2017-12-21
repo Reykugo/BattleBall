@@ -74,6 +74,7 @@ GameObject:
   - component: {fileID: 135607641498722158}
   - component: {fileID: 23064506423071874}
   - component: {fileID: 54161809577759538}
+  - component: {fileID: 114781346942275162}
   - component: {fileID: 114969521378256898}
   - component: {fileID: 114576343465469550}
   - component: {fileID: 114278794317506024}
@@ -443,6 +444,18 @@ MonoBehaviour:
   groundChecker: {fileID: 114412842844063274}
   currentDirection: {x: 0, y: 0, z: 0}
   maxVelocity: 10
+  movementModifier: 1
+--- !u!114 &114781346942275162
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1353640005141478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d12fddfb12c74c84fa7e0d07bee8454d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114893640982883602
 MonoBehaviour:
   m_ObjectHideFlags: 1

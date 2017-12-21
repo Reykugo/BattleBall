@@ -2,9 +2,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using System;
 
 public class GameManager : MonoBehaviour
 {
+
+
+    [Serializable]
+    public class PowerReference
+    {
+        public Power.PowerType power;
+        public GameObject prefab;
+    }
+
+    public PowerReference[] ListOfPower;
+    //
+    private Dictionary<Power.PowerType, GameObject> powerByType = new Dictionary<Power.PowerType, GameObject>();
+
+
     public enum TypeOfGame { TIME, LIFE };
 
     public GameObject avatarPrefab;
@@ -18,14 +33,17 @@ public class GameManager : MonoBehaviour
         set;
     }
 
-    private List<GameObject> avatars;//Object
+    public List<GameObject> avatars;//Object
 
     private AreaConfig areaConfig; //TerrainConfiguration (spawners...)
     public PopUp reconnectPopUp;
     void Start()
     {
-
-        avatars = new List<GameObject>();
+        //For editor use.
+        foreach (var power in ListOfPower)
+        {
+            powerByType.Add(power.power, power.prefab);
+        }
         SceneManager.sceneLoaded += OnTerrainLoaded;
     }
 
@@ -34,14 +52,20 @@ public class GameManager : MonoBehaviour
     {
         if (scene.buildIndex == 1) //==Lobby
         {
-
-
+            //Unload 
+            powerByType.Clear();
+            avatars.Clear();
         }
         else if (scene.buildIndex >= 2)//We are loading a game;
         {
             areaConfig = GameObject.Find("Area").GetComponent<AreaConfig>();
             if (areaConfig.spawners.Count < players.Count)
-                return;//Error too much players for the spawners;
+                return;//Error too much players for the spawners
+            avatars = new List<GameObject>();
+            foreach(var power in ListOfPower)
+            {
+                powerByType.Add(power.power, power.prefab);
+            }
             GenerateAvatars();
         }
     }
@@ -102,7 +126,7 @@ public class GameManager : MonoBehaviour
 
         foreach (var p in players)
         {
-            Transform spawner = spawners[Random.Range(0, spawners.Count)];
+            Transform spawner = spawners[UnityEngine.Random.Range(0, spawners.Count)];
             GameObject avatar = Instantiate(avatarPrefab, spawner.position, Quaternion.identity);
             avatars.Add(avatar);
             spawners.Remove(spawner);
@@ -118,6 +142,39 @@ public class GameManager : MonoBehaviour
             //Setting up avatar inputs.
             PlayerInputHandler inputHandler = avatar.GetComponent<PlayerInputHandler>();
             inputHandler.InitNet(playerScript.playerConnexion);
+        }
+    }
+
+    public void ActivatePower(GameObject activator, Power.PowerType powerType)
+    {
+        GameObject powerPrefab = powerByType[powerType];
+        var power = powerPrefab.GetComponent<Power>();
+        GameObject powerGo = null;
+        Power powerScript;
+        bool other = false;
+        switch (power.powerTarget)
+        {
+            case Power.PowerTarget.OTHERS:
+                other = true;
+                goto case Power.PowerTarget.ALL;
+            case Power.PowerTarget.ALL:
+                foreach(var avatar in avatars)
+                {
+                    if (other && avatar == activator)//ignore the activator if the powerTarget is Others
+                        continue;
+                    powerGo = Instantiate(powerByType[powerType], avatar.transform.position, Quaternion.identity, avatar.transform);
+                    powerScript = powerGo.GetComponent<Power>();
+                    avatar.GetComponent<EffectManager>().SetPower(powerScript);
+                }
+                break;
+            case Power.PowerTarget.SELF:
+                powerGo = Instantiate(powerByType[powerType], activator.transform.position, Quaternion.identity, activator.transform);
+                powerScript = powerGo.GetComponent<Power>();
+                activator.GetComponent<EffectManager>().SetPower(powerScript);
+                break;
+            default:
+                Debug.LogAssertion("Unrecognized power");
+                break;
         }
     }
 }

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerDie : MonoBehaviour {
 
-
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag == "Player")
@@ -12,5 +11,4 @@ public class PlayerDie : MonoBehaviour {
             other.GetComponent<AvatarScript>().PlayerFall();//TODO do something else;
         }
     }
-
 }

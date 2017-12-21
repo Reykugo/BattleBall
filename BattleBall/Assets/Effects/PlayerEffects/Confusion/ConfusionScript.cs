@@ -12,8 +12,6 @@ public class ConfusionScript : Power {
 
         movingScript = GetComponentInParent<MovingScript>();
         movingScript.movementModifier = -1f;
-		//Change controls.
-        //Addd particles.
 	}
 
     void OnDestroy()

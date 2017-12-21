@@ -5,48 +5,23 @@ using UnityEngine;
 
 public class ItemScript : MonoBehaviour {
 
-    private Power.PowerType powerType;
-
-    public PowerReference[] ListOfPower;
-
-    private Dictionary<Power.PowerType, GameObject> powerByType  = new Dictionary<Power.PowerType, GameObject>();
-	// Use this for initialization
-	void Start () {
-        //powerType = Power.PowerType.ICE
-        powerType = (Power.PowerType)UnityEngine.Random.Range(0, (int)Power.PowerType.LENGTH);
-        foreach(PowerReference powerRef in ListOfPower)
-        {
-            powerByType[powerRef.power] = powerRef.prefab;
-        }
-        Debug.Log(powerByType);
-    }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
-    void AddEffect(GameObject player)
+    public Power.PowerType powerType = Power.PowerType.LENGTH;//Length Mean random.
+    private GameManager manager;
+    void Start()
     {
-        GameObject power = Instantiate(powerByType[powerType]);
-        power.transform.parent = player.transform;
-        power.transform.position = player.transform.position;
-        power.GetComponent<Power>().StartEffect();
+        manager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        if(powerType == Power.PowerType.LENGTH)
+        {
+            powerType = (Power.PowerType)UnityEngine.Random.Range(0, (int)Power.PowerType.LENGTH);
+        }
     }
 
     void OnTriggerEnter(Collider c)
     {
         if(c.tag == "Player")
         {
-            AddEffect(c.gameObject);
+            manager.ActivatePower(c.gameObject, powerType);
             Destroy(gameObject);
         }
     }
-}
-
-[Serializable]
-public class PowerReference
-{
-    public Power.PowerType power;
-    public GameObject prefab;
 }

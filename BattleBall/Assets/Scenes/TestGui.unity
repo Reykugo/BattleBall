@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.21509334, g: 0.1900469, b: 0.13914743, a: 1}
+  m_IndirectSpecularColor: {r: 0.21417901, g: 0.1890845, b: 0.13839787, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -441,6 +441,48 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 75.78001, y: 0, z: 0}
+--- !u!1001 &115308240
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4724037715692092, guid: e06bbd70cd4289343800f604d288856c, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4724037715692092, guid: e06bbd70cd4289343800f604d288856c, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 1.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 4724037715692092, guid: e06bbd70cd4289343800f604d288856c, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4724037715692092, guid: e06bbd70cd4289343800f604d288856c, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4724037715692092, guid: e06bbd70cd4289343800f604d288856c, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4724037715692092, guid: e06bbd70cd4289343800f604d288856c, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4724037715692092, guid: e06bbd70cd4289343800f604d288856c, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4724037715692092, guid: e06bbd70cd4289343800f604d288856c, type: 2}
+      propertyPath: m_RootOrder
+      value: 15
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: e06bbd70cd4289343800f604d288856c, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &189153450
 GameObject:
   m_ObjectHideFlags: 0
@@ -1028,6 +1070,11 @@ Prefab:
       propertyPath: ShapeModule.radiusThickness
       value: 1.0000
       objectReference: {fileID: 0}
+    - target: {fileID: 198619240733985020, guid: 34d88182d12da02488691aee6e89cccf,
+        type: 2}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1.0000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 34d88182d12da02488691aee6e89cccf, type: 2}
   m_IsPrefabParent: 0
@@ -1175,83 +1222,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &397864297
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4724037715692092, guid: e06bbd70cd4289343800f604d288856c, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4724037715692092, guid: e06bbd70cd4289343800f604d288856c, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 1.08
-      objectReference: {fileID: 0}
-    - target: {fileID: 4724037715692092, guid: e06bbd70cd4289343800f604d288856c, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4724037715692092, guid: e06bbd70cd4289343800f604d288856c, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4724037715692092, guid: e06bbd70cd4289343800f604d288856c, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4724037715692092, guid: e06bbd70cd4289343800f604d288856c, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4724037715692092, guid: e06bbd70cd4289343800f604d288856c, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4724037715692092, guid: e06bbd70cd4289343800f604d288856c, type: 2}
-      propertyPath: m_RootOrder
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 108163077805151730, guid: e06bbd70cd4289343800f604d288856c,
-        type: 2}
-      propertyPath: m_Color.g
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 108163077805151730, guid: e06bbd70cd4289343800f604d288856c,
-        type: 2}
-      propertyPath: m_Color.b
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 108163077805151730, guid: e06bbd70cd4289343800f604d288856c,
-        type: 2}
-      propertyPath: m_Color.r
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114969521378256898, guid: e06bbd70cd4289343800f604d288856c,
-        type: 2}
-      propertyPath: AvatarColor.r
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114969521378256898, guid: e06bbd70cd4289343800f604d288856c,
-        type: 2}
-      propertyPath: AvatarColor.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114969521378256898, guid: e06bbd70cd4289343800f604d288856c,
-        type: 2}
-      propertyPath: AvatarColor.b
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114969521378256898, guid: e06bbd70cd4289343800f604d288856c,
-        type: 2}
-      propertyPath: areaConfig
-      value: 
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: e06bbd70cd4289343800f604d288856c, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &533240129
 GameObject:
   m_ObjectHideFlags: 0
@@ -1595,6 +1565,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98e8575e8ef0b6741ba456f0d596a436, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ListOfPower: []
   avatarPrefab: {fileID: 0}
   GameType: 1
   GameDuration: 60

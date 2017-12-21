@@ -5,41 +5,56 @@ using UnityEngine;
 public abstract class Power : MonoBehaviour{
 
     public float PowerTime;
+
     public enum PowerType { GAZ, METAL, ICE, LIGHTNING, CONFUSION, TORNADO, LENGTH };
+    public enum PowerTarget { ALL, SELF, OTHERS }
+    public enum PowerActivator { AUTOMATIC, MANUAL }
+
     public string powerName;
+
+    //TODO ugly make it great again.
+    public PowerType powerType;
+    public PowerTarget powerTarget = PowerTarget.SELF;//Default SELF;
+    public PowerActivator powerActivator = PowerActivator.AUTOMATIC;
+
+
+    public delegate void StateObserver();
+    public event StateObserver OnEnd;
+    public event StateObserver OnActivation;
+
+    protected bool activated=false;//Activated prevent to run an effect multiple times or allow to run it multiple times with maximum control.
 
     protected GameObject player;
 
-    // Use this for initialization
     void Start()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public void StartEffect()//TODO handle more cases.
     {
-
-    }
-
-    public void StartEffect()
-    {
-        player = this.transform.parent.gameObject;
-        Debug.Log("StartCoroutine PowerDuration");
-        StartCoroutine(PowerDuration(PowerTime));
+        Debug.Log("EFFECT STARTED before was :" + activated);
+        Debug.Log(transform.parent);
+        player = transform.parent.gameObject;
+        if (!activated)
+        {
+            activated = true;
+            if(OnActivation != null)
+                OnActivation();
+            StartCoroutine(PowerDuration(PowerTime));
+        }
     }
 
     public IEnumerator PowerDuration(float timer)
     {
-        Debug.Log("timer : " + timer);
         yield return new WaitForSeconds(timer);
         LosePower();
     }
 
     public void LosePower()
     {
-        Debug.Log("Power : " + powerName + "finnished");
+        if(OnEnd != null)
+            OnEnd();
         Destroy(this.gameObject);
-        
     }
 }

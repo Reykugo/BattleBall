@@ -29,6 +29,9 @@ public class AvatarScript : MonoBehaviour
     private PlayerInputHandler handler;
     private ColorUnifier colorUnifier;
 
+    private EffectManager effectManager;//StateManager.
+    private AvatarState stateManager; // Handle various actions movmenet and other.
+
 
     //Stun TODO move.
     private Rigidbody rb;
@@ -44,6 +47,8 @@ public class AvatarScript : MonoBehaviour
         movingScript = GetComponent<MovingScript>();
         playerMaterial = GetComponent<MeshRenderer>().material;
         handler = GetComponent<PlayerInputHandler>();
+        stateManager = GetComponent<AvatarState>();
+        effectManager = GetComponent<EffectManager>();
     }
     // Use this for initialization
     void Start()
@@ -61,18 +66,19 @@ public class AvatarScript : MonoBehaviour
         handler.OnTouch += OnTouch;
         handler.OnTouchStarted += OnTouchStarted;
         handler.OnTouchStopped += OnTouchReleased;
-
-
         SetPlayerColor(AvatarColor);
     }
 
     private void OnMoving(Vector3 movement)
     {
+        //movement = currentEffect.ApplyMovementModifier(movement);
         movingScript.SetMovement(movement);
     }
 
     private void OnShaking()
     {
+        effectManager.ActivateCurrentPower();
+        //
         //Call Effect activation if any effect and can be shaking activated.
     }
 
@@ -93,7 +99,7 @@ public class AvatarScript : MonoBehaviour
 
     public void SetPlayerName(string name)
     {
-        this.name = "player-" + name;
+        name = "player-" + name;
         playerIdentityText.text = name;
     }
 
@@ -119,6 +125,8 @@ public class AvatarScript : MonoBehaviour
         transform.position = areaConfig.RespawnPoint.position;
     }
 
+
+    //TODO move in a AvatarCapacity.
     public void SetPlayerCapacityState(bool state = true)
     {
         GetComponent<MovingScript>().enabled = state;
@@ -146,13 +154,10 @@ public class AvatarScript : MonoBehaviour
     public void OnCollisionEnter(Collision collision)
     {
         //If the magnitude of the collider is greater than the treshold we stun the IStunnable;
-        var collRb = collision.gameObject.GetComponent<Rigidbody>();
-        Debug.LogWarning("Collide with " + collision.gameObject.tag + " : " + collision.gameObject.name);
-        Debug.LogWarning("Magnitude" + rb.velocity.magnitude);
-        if (collision.gameObject.tag == "Stunable" && rb.velocity.magnitude > stunTreshold ///Wall Case TODO better to compute stunDuration based on force when colliding.
-            || collision.gameObject.tag == "Player" && rb.velocity.magnitude > stunTreshold && rb.velocity.magnitude >= collRb.velocity.magnitude)//Player Case
+        var OtherDashScript = collision.gameObject.GetComponent<DashScript>();
+        if (collision.gameObject.tag == "Stunable" && dashScript.IsOnDash ///Wall Case TODO better to compute stunDuration based on force when colliding.
+            || collision.gameObject.tag == "Player" && dashScript.IsOnDash && OtherDashScript.IsOnDash)//Player Case
         {
-            Debug.Log("Stunned");
             StunPlayer();
         }
     }

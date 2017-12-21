@@ -17,13 +17,17 @@ public class GazScript : Power {
     void OnDestroy()
     {
         if (activated)
+        {
             player.gameObject.layer = 9;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         if (activated)
+        {
             player.gameObject.layer = 8;
+        }
     }
 }

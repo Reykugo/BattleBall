@@ -12,18 +12,27 @@ public class MetalScript : Power {
     // Use this for initialization
     void Start()
     {
-        baseMaterial = player.GetComponent<MeshRenderer>().material;
-        player.GetComponent<MeshRenderer>().material = MetalMaterial;
-        PlayerRigidbody = player.GetComponent<Rigidbody>();
+        if (activated)
+        {
+            baseMaterial = player.GetComponent<MeshRenderer>().material;
+            player.GetComponent<MeshRenderer>().material = MetalMaterial;
+            PlayerRigidbody = player.GetComponent<Rigidbody>();
+        }
     }
 
     void OnDestroy()
     {
-        player.GetComponent<MeshRenderer>().material = baseMaterial;
+        if (activated)
+        {
+            player.GetComponent<MeshRenderer>().material = baseMaterial;
+        }
     }
 	
 	// Update is called once per frame
 	void Update () {
-        PlayerRigidbody.velocity = Vector3.zero;
-	}
+        if (activated)
+        {
+            PlayerRigidbody.velocity = Vector3.zero;
+        }
+    }
 }

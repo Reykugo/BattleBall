@@ -26,6 +26,7 @@ public abstract class Power : MonoBehaviour{
 
     protected GameObject player;
 
+
     void Start()
     {
         
@@ -34,7 +35,6 @@ public abstract class Power : MonoBehaviour{
     public void StartEffect()//TODO handle more cases.
     {
         Debug.Log("EFFECT STARTED before was :" + activated);
-        Debug.Log(transform.parent);
         player = transform.parent.gameObject;
         if (!activated)
         {
@@ -44,6 +44,8 @@ public abstract class Power : MonoBehaviour{
             StartCoroutine(PowerDuration(PowerTime));
         }
     }
+
+    
 
     public IEnumerator PowerDuration(float timer)
     {

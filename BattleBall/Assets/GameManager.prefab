@@ -63,10 +63,12 @@ MonoBehaviour:
   - power: 4
     prefab: {fileID: 1752962257044254, guid: 87c1c6c8a43b4114782f544ce18f24d5, type: 2}
   - power: 5
-    prefab: {fileID: 1419776283857736, guid: 91280742ecb954e4b8bf7e5b802292d8, type: 2}
+    prefab: {fileID: 1349640793313214, guid: 9b7654aecf4ae8f42a89cab42554430f, type: 2}
   avatarPrefab: {fileID: 0}
   GameType: 1
   GameDuration: 60
   StartingLife: 0
-  avatars: []
+  avatars:
+  - {fileID: 0}
+  - {fileID: 0}
   reconnectPopUp: {fileID: 0}

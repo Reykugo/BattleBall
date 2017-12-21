@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 198443612396044420}
   - component: {fileID: 199448601936224266}
   - component: {fileID: 114072197810720524}
+  - component: {fileID: 136653849705996320}
   m_Layer: 0
   m_Name: TornadoEffect
   m_TagString: Untagged
@@ -115,13 +116,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a436350a5fbc8a4eb0ef8728dd48c9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PowerTime: 5
-  powerName: Tornado
-  powerType: 5
-  powerTarget: 1
-  powerActivator: 0
-  PullSpeed: 20
+  PullSpeed: 200
   Player: {fileID: 0}
+--- !u!136 &136653849705996320
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1419776283857736}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 5.8
+  m_Height: 2.13
+  m_Direction: 1
+  m_Center: {x: 0, y: 3, z: 0}
 --- !u!198 &198443612396044420
 ParticleSystem:
   m_ObjectHideFlags: 1
@@ -182,7 +191,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 693395867
+  randomSeed: -1265878202
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -272,7 +281,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      maxColor: {r: 0.42745098, g: 0.42745098, b: 0.42745098, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -1084,16 +1093,16 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 1, g: 1, b: 1, a: 1}
-        key1: {r: 0, g: 0.08965492, b: 1, a: 1}
-        key2: {r: 1, g: 1, b: 1, a: 1}
+        key0: {r: 0.42647058, g: 0.42647058, b: 0.42647058, a: 1}
+        key1: {r: 0, g: 0.086358786, b: 0.9632353, a: 1}
+        key2: {r: 0.42745098, g: 0.42745098, b: 0.42745098, a: 1}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
         key5: {r: 0, g: 0, b: 0, a: 0}
         key6: {r: 0, g: 0, b: 0, a: 0}
         key7: {r: 0, g: 0, b: 0, a: 0}
         ctime0: 0
-        ctime1: 31804
+        ctime1: 32382
         ctime2: 65535
         ctime3: 0
         ctime4: 0
@@ -3499,7 +3508,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 438695671
+  randomSeed: -567729226
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -6816,7 +6825,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: 1789439969
+  randomSeed: -340401892
   InitialModule:
     serializedVersion: 3
     enabled: 1

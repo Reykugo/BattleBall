@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PopUp : MonoBehaviour {
 
@@ -11,10 +12,30 @@ public class PopUp : MonoBehaviour {
     public event OpenObserver OnOpen;
     public event OpenObserver OnClose;
 
+    public Text title;
+    public Text content;
+
     void Start()
     {
         Close();
     }
+
+    public void UpdateTitle(string newText)
+    {
+        if (title)
+        {
+            title.text = newText;
+        }
+    }
+
+    public void UpdateContent(string newText)
+    {
+        if (content)
+        {
+            content.text = newText;
+        }
+    }
+
     public virtual void Open()
     {
         if (isOpen == true)

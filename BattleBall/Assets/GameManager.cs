@@ -6,8 +6,6 @@ using System;
 
 public class GameManager : MonoBehaviour
 {
-
-
     [Serializable]
     public class PowerReference
     {
@@ -36,6 +34,7 @@ public class GameManager : MonoBehaviour
     public List<GameObject> avatars;//Object
 
     private AreaConfig areaConfig; //TerrainConfiguration (spawners...)
+    private List<PlayerInfo> disconnectedPlayers = new List<PlayerInfo>();
     public PopUp reconnectPopUp;
     void Start()
     {
@@ -55,6 +54,7 @@ public class GameManager : MonoBehaviour
             //Unload 
             powerByType.Clear();
             avatars.Clear();
+            areaConfig = null;
         }
         else if (scene.buildIndex >= 2)//We are loading a game;
         {
@@ -69,16 +69,49 @@ public class GameManager : MonoBehaviour
             GenerateAvatars();
         }
     }
-    public void PlayerReconnected(NetworkScript.ConnectionData connectionData)
+    public void PlayerReconnected(PlayerInfo playerInfo)
     {
-        ResumeGame();
-        reconnectPopUp.Close();
+        disconnectedPlayers.Remove(playerInfo);
+
+        if(disconnectedPlayers.Count == 0)
+        {
+            ResumeGame();
+            reconnectPopUp.Close();
+        }
+        else
+        {
+            var str = "";
+            foreach (var p in disconnectedPlayers)
+            {
+                str += " ";
+                str += p.playerName;
+            }
+            str += " ha";
+            str += (disconnectedPlayers.Count > 1) ? "ve" : "s";
+            str += " disconnected";
+        }
     }
 
-    public void PlayerDisconnected(NetworkScript.ConnectionData connectionData)
+    public void PlayerDisconnected(PlayerInfo playerInfo)
     {
-        PauseGame();
-        reconnectPopUp.Open();
+        disconnectedPlayers.Add(playerInfo);
+        
+        var str = "";
+        foreach(var p in disconnectedPlayers)
+        {
+            str += " ";
+            str += p.playerName;
+        }
+        str += "ha";
+        str += (disconnectedPlayers.Count > 1) ? "ve" : "s";
+        str += "disconnected";
+        reconnectPopUp.UpdateTitle(str);
+
+        if(disconnectedPlayers.Count == 1)
+        {
+            PauseGame();
+            reconnectPopUp.Open();
+        }
     }
 
 

@@ -30,7 +30,6 @@ public class AvatarScript : MonoBehaviour
     private ColorUnifier colorUnifier;
 
     private EffectManager effectManager;//StateManager.
-    private AvatarState stateManager; // Handle various actions movmenet and other.
 
 
     //Stun TODO move.
@@ -47,7 +46,6 @@ public class AvatarScript : MonoBehaviour
         movingScript = GetComponent<MovingScript>();
         playerMaterial = GetComponent<MeshRenderer>().material;
         handler = GetComponent<PlayerInputHandler>();
-        stateManager = GetComponent<AvatarState>();
         effectManager = GetComponent<EffectManager>();
     }
     // Use this for initialization

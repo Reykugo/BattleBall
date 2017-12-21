@@ -25,6 +25,7 @@ GameObject:
   - component: {fileID: 136275811314405472}
   - component: {fileID: 54153637990697056}
   - component: {fileID: 114403158537225160}
+  - component: {fileID: 122574811122851238}
   m_Layer: 0
   m_Name: Item
   m_TagString: Untagged
@@ -113,6 +114,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   powerType: 7
+--- !u!122 &122574811122851238
+Halo:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1403772559290854}
+  m_Enabled: 1
+  m_Color:
+    serializedVersion: 2
+    rgba: 4293722367
+  m_Size: 1
 --- !u!136 &136275811314405472
 CapsuleCollider:
   m_ObjectHideFlags: 1

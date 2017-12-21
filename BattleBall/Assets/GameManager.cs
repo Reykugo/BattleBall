@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour
         {
             powerByType.Add(power.power, power.prefab);
         }
-        
+
         SceneManager.sceneLoaded += OnTerrainLoaded;
     }
 

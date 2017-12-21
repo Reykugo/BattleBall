@@ -116,8 +116,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a436350a5fbc8a4eb0ef8728dd48c9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PullSpeed: 200
+  PullSpeed: 125
+  Duration: 5
+  Speed: 5
   Player: {fileID: 0}
+  finalDestination: {x: 0, y: 0, z: 0}
 --- !u!136 &136653849705996320
 CapsuleCollider:
   m_ObjectHideFlags: 1

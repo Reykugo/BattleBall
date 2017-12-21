@@ -55,6 +55,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PowerTime: 5
   powerName: Ice
+  powerType: 2
+  powerTarget: 1
+  powerActivator: 0
   GenerationSpeed: 0.1
 --- !u!198 &198563720096132744
 ParticleSystem:

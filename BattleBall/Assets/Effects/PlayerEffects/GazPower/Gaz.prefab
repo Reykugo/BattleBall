@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 198190746431260884}
   - component: {fileID: 199366332091556760}
   - component: {fileID: 114409654280072018}
+  - component: {fileID: 114046241033002880}
   m_Layer: 9
   m_Name: Gaz
   m_TagString: Untagged
@@ -36,12 +37,28 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1741282583651052}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7.0918307, y: -2.2355237, z: 1.4292133}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114046241033002880
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1741282583651052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94e1974ce2cadf640a5d32175c020bd3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PowerTime: 0
+  powerName: 
+  powerType: 0
+  powerTarget: 1
+  powerActivator: 0
 --- !u!114 &114409654280072018
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -55,6 +72,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PowerTime: 5
   powerName: Gaz
+  powerType: 0
+  powerTarget: 1
+  powerActivator: 1
 --- !u!198 &198190746431260884
 ParticleSystem:
   m_ObjectHideFlags: 1

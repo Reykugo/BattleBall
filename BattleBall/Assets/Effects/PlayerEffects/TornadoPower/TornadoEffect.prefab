@@ -96,7 +96,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1419776283857736}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.7211876, y: 0.27, z: 10.509167}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4275756811842568}
@@ -117,6 +117,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PowerTime: 5
   powerName: Tornado
+  powerType: 5
+  powerTarget: 1
+  powerActivator: 0
   PullSpeed: 20
   Player: {fileID: 0}
 --- !u!198 &198443612396044420

@@ -34,7 +34,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1599271772346916}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.8684424, y: 0.36477056, z: 0.39561772}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -53,4 +53,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PowerTime: 5
   powerName: Metal
+  powerType: 1
+  powerTarget: 1
+  powerActivator: 0
   MetalMaterial: {fileID: 2100000, guid: eb8ca42fd4025af4896fa2ad6f373d92, type: 2}

@@ -55,6 +55,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PowerTime: 5
   powerName: Confusion
+  powerType: 4
+  powerTarget: 2
+  powerActivator: 0
 --- !u!198 &198704396063015092
 ParticleSystem:
   m_ObjectHideFlags: 1

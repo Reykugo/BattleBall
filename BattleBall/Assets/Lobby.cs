@@ -26,6 +26,8 @@ public class Lobby : UnDestroyable {
     //Local data
     private ServerNetworkDiscoveryScript netDiscovery;
     private Dictionary<string, GameObject> players = new Dictionary<string, GameObject>();
+    private List<GameObject> disconnectedPlayers = new List<GameObject>();
+
     public int playersCount = 0;//Todo use get/set restrictions;
     private bool InGame = false;
 
@@ -81,17 +83,25 @@ public class Lobby : UnDestroyable {
         }
         else if (InGame && players.ContainsKey(connectionData.ipAddress))
         {
-            Debug.Log("Reconnected");
-            netDiscovery.StopBroadcast();
             var go = players[connectionData.ipAddress];
+            disconnectedPlayers.Remove(go);
+            if(disconnectedPlayers.Count == 0)
+            {
+                netDiscovery.StopBroadcast();
+            }
+            
+            //If there is no other player to wait.
             var s = go.GetComponent<PlayerConnexionScript>();
+            var tmp = s.clientData;
+            tmp.connexionId = connectionData.connexionId;
+            s.clientData = tmp;
             var p = go.GetComponent<PlayerInfo>();
             //Player asked to reconnect.
             //Update his Color
-            s.SendColorUpdate(p.playerColor);
+            s.SendColorUpdate(p.playerColor);//Be sure that is appropriate color.
             s.SendStartGame();//If needed, might be ignored by the client.
             //SendHim
-            gameManager.PlayerReconnected(connectionData);
+            gameManager.PlayerReconnected(p);
         }
     }
 
@@ -100,9 +110,15 @@ public class Lobby : UnDestroyable {
         if(InGame && players.ContainsKey(connectionData.ipAddress))
         {
             //PlayerDisconnected after game started.
-            netDiscovery.Initialize();
-            netDiscovery.StartAsServer();
-            gameManager.PlayerDisconnected(connectionData);
+            disconnectedPlayers.Add(players[connectionData.ipAddress]);
+            var p = players[connectionData.ipAddress].GetComponent<PlayerInfo>();
+
+            if(disconnectedPlayers.Count == 1)
+            {
+                netDiscovery.Initialize();
+                netDiscovery.StartAsServer();
+            }
+            gameManager.PlayerDisconnected(p);
         }
         else if( !InGame && players.ContainsKey(connectionData.ipAddress))
         {
@@ -167,7 +183,7 @@ public class Lobby : UnDestroyable {
     void ParseMessage(NetworkScript.ConnectionData connectionData, string buffer)
     {
         string[] command = buffer.Split(";".ToCharArray());
-        if (command[0] == "Ready")
+        if (command[0] == "Ready" && !InGame)
         {
             if (players.ContainsKey(connectionData.ipAddress))
             {

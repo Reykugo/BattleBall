@@ -55,17 +55,15 @@ MonoBehaviour:
   - power: 0
     prefab: {fileID: 1741282583651052, guid: e1f78e4cf0c1a2943b22331e9057006f, type: 2}
   - power: 1
-    prefab: {fileID: 1599271772346916, guid: c44db0308ab0ff941b72dc3fe867fdbc, type: 2}
-  - power: 2
     prefab: {fileID: 1107487078085898, guid: 4d08899e2dda70d4fa955c9bf675e889, type: 2}
-  - power: 3
+  - power: 2
     prefab: {fileID: 1916480234648176, guid: 211217b36c198c14bb8f0b6ec66d67d2, type: 2}
-  - power: 4
+  - power: 3
     prefab: {fileID: 1752962257044254, guid: 87c1c6c8a43b4114782f544ce18f24d5, type: 2}
-  - power: 5
+  - power: 4
     prefab: {fileID: 1349640793313214, guid: 9b7654aecf4ae8f42a89cab42554430f, type: 2}
-  - power: 6
-    prefab: {fileID: 1319985282767150, guid: fc2cccf7545aae341960d04f61fe544d, type: 2}
+  - power: 5
+    prefab: {fileID: 1013229141604234, guid: 1cf97e718a667884e9d01b1e14b84b74, type: 2}
   avatarPrefab: {fileID: 0}
   GameType: 1
   GameDuration: 60

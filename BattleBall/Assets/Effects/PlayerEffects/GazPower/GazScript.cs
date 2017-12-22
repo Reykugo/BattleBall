@@ -8,10 +8,12 @@ public class GazScript : Power {
 
     private Collider PlayerCollider;
 
+    private float PlayerPositionY;
+
     // Use this for initialization
     void Start()
     {
-
+        PlayerPositionY = player.transform.position.y;
     }
 
     void OnDestroy()
@@ -28,6 +30,9 @@ public class GazScript : Power {
         if (activated)
         {
             player.gameObject.layer = 8;
+            player.transform.position = new Vector3(player.transform.position.x, PlayerPositionY, player.transform.position.z);
+            player.GetComponentInChildren<GroundCheckerScript>().IsGrounded = true;
+            Debug.Log(player.GetComponentInChildren<GroundCheckerScript>().IsGrounded);
         }
     }
 }

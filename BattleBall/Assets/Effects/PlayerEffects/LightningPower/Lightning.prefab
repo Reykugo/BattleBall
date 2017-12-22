@@ -56,7 +56,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PowerTime: 5
   powerName: Lightning
-  powerType: 3
+  powerType: 2
   powerTarget: 1
   powerActivator: 0
 --- !u!136 &136353410632198034

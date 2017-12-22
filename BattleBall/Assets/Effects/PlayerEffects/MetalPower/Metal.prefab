@@ -53,7 +53,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PowerTime: 5
   powerName: Metal
-  powerType: 1
+  powerType: 6
   powerTarget: 1
   powerActivator: 0
   MetalMaterial: {fileID: 2100000, guid: 0b49d12679063ba4db091d1570674418, type: 2}

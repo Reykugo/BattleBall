@@ -55,10 +55,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PowerTime: 20
   powerName: Tornado
-  powerType: 5
+  powerType: 4
   powerTarget: 1
   powerActivator: 0
-  TornadoTimeToLive: 10
+  TornadoTimeToLive: 5
   TornadoPrefab: {fileID: 1419776283857736, guid: 91280742ecb954e4b8bf7e5b802292d8,
     type: 2}
 --- !u!198 &198480448988630806

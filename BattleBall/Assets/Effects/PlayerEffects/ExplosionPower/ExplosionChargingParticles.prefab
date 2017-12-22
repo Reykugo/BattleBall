@@ -55,7 +55,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PowerTime: 5
   powerName: Explosion
-  powerType: 6
+  powerType: 5
   powerTarget: 1
   powerActivator: 0
   ExplosionParticlesCharging: {fileID: 1319985282767150}

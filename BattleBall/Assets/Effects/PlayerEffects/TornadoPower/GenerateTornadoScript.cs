@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GenerateTornadoScript : Power {
 
-    public float TornadoTimeToLive = 10f;
+    public float TornadoTimeToLive = 5f;
     public GameObject TornadoPrefab;
     private DashScript dashScript;
     // Use this for initialization

@@ -47,6 +47,11 @@ public class GameManager : MonoBehaviour
         SceneManager.sceneLoaded += OnTerrainLoaded;
     }
 
+    void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnTerrainLoaded;
+    }
+
 
     private void OnTerrainLoaded(Scene scene, LoadSceneMode mode)
     {

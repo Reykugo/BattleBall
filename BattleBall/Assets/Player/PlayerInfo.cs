@@ -29,6 +29,9 @@ public class PlayerInfo : MonoBehaviour {
     public void SendAvatarDead(GameObject avatar)
     {
         playerConnexion.SendAvatarDead();
+        var avatarScript = avatar.GetComponent<AvatarScript>();
+        avatarScript.OnAvatarFall -= SendAvatarFall;
+        avatarScript.OnAvatarDie -= SendAvatarDead;
     }
 
 }

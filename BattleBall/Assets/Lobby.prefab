@@ -199,15 +199,19 @@ MonoBehaviour:
     prefab: {fileID: 1752962257044254, guid: 87c1c6c8a43b4114782f544ce18f24d5, type: 2}
   - power: 5
     prefab: {fileID: 1349640793313214, guid: 9b7654aecf4ae8f42a89cab42554430f, type: 2}
+  - power: 6
+    prefab: {fileID: 1319985282767150, guid: fc2cccf7545aae341960d04f61fe544d, type: 2}
   avatarPrefab: {fileID: 1353640005141478, guid: e06bbd70cd4289343800f604d288856c,
     type: 2}
   GameType: 1
   GameDuration: 60
-  StartingLife: 1
+  StartingLife: 5
+  players: []
   avatars:
   - {fileID: 0}
   - {fileID: 0}
   reconnectPopUp: {fileID: 114668565774635770}
+  gameStarted: 0
 --- !u!114 &114370002279886200
 MonoBehaviour:
   m_ObjectHideFlags: 1

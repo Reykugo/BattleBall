@@ -53,6 +53,12 @@ public class DashSystemScript : MonoBehaviour {
         chargeEffect.Stop();
     }
 
+    void OnDestroy()
+    {
+        colorUnifier.OnColorChanged -= Init;
+        
+    }
+
     public void Init(Color color)
     {
         currentColor = color;

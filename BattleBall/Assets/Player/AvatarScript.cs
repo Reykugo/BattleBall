@@ -67,6 +67,15 @@ public class AvatarScript : MonoBehaviour
         SetPlayerColor(AvatarColor);
     }
 
+    void OnDestroy()
+    {
+        handler.OnMoving -= OnMoving;
+        handler.OnShaking -= OnShaking;
+        handler.OnTouch -= OnTouch;
+        handler.OnTouchStarted -= OnTouchStarted;
+        handler.OnTouchStopped -= OnTouchReleased;
+    }
+
     private void OnMoving(Vector3 movement)
     {
         //movement = currentEffect.ApplyMovementModifier(movement);

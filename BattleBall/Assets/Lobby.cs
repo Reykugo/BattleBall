@@ -63,6 +63,7 @@ public class Lobby : UnDestroyable {
             Color[] playerColors = { Color.red, Color.blue, Color.yellow, Color.green };
 
             var p = go.GetComponent<PlayerInfo>();
+            Debug.Log(connectionData.connexionId);
             p.playerColor = playerColors[connectionData.connexionId - 1];
             p.playerConnexion = s;
             p.playerName = "J" + connectionData.connexionId;
@@ -231,7 +232,7 @@ public class Lobby : UnDestroyable {
         if(!netDiscovery.running)
             netDiscovery.StartAsServer();
         yield return new WaitForSeconds(0.5f);
-        if (playersCount == maxPlayers || gameManager.gameStarted)
+        if (playersCount == maxPlayers || gameManager.gameStarted && netDiscovery.running)
         {
             netDiscovery.StopBroadcast();
         }

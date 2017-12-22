@@ -16,10 +16,8 @@ public class ExplosionScript : MonoBehaviour {
 
     void OnTriggerEnter(Collider c)
     {
-        if (c.tag == "Player" && c.gameObject.name != player.name)
+        if (c.tag == "Player" && c.gameObject != player)
         {
-            Debug.Log("Force : " + ((c.transform.position - transform.position) * 1000).magnitude);
-            Debug.Log("distance : " + Vector3.Distance(transform.position, c.transform.position));
             c.gameObject.GetComponent<Rigidbody>().AddForce(Vector3.Normalize(c.transform.position - transform.position) * (1 / Vector3.Distance(transform.position, c.transform.position) * explosionPower));
         }
     }

@@ -14,6 +14,9 @@ public class GazScript : Power {
     void Start()
     {
         PlayerPositionY = player.transform.position.y;
+        ParticleSystem particles = GetComponent<ParticleSystem>();
+        var main = particles.main;
+        main.startColor = player.GetComponent<AvatarScript>().AvatarColor;
     }
 
     void OnDestroy()

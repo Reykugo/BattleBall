@@ -177,6 +177,11 @@ Prefab:
       propertyPath: avatars.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114039094003403394, guid: c8877c657f2365d4aa057ff0c31721c6,
+        type: 2}
+      propertyPath: players.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4322345388562240, guid: c8877c657f2365d4aa057ff0c31721c6, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -214,6 +219,21 @@ Prefab:
       propertyPath: avatars.Array.data[0]
       value: 
       objectReference: {fileID: 1003847072}
+    - target: {fileID: 114039094003403394, guid: c8877c657f2365d4aa057ff0c31721c6,
+        type: 2}
+      propertyPath: StartingLife
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114039094003403394, guid: c8877c657f2365d4aa057ff0c31721c6,
+        type: 2}
+      propertyPath: players.Array.data[0]
+      value: 
+      objectReference: {fileID: 1003847072}
+    - target: {fileID: 114039094003403394, guid: c8877c657f2365d4aa057ff0c31721c6,
+        type: 2}
+      propertyPath: gameStarted
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c8877c657f2365d4aa057ff0c31721c6, type: 2}
   m_IsPrefabParent: 0
@@ -261,25 +281,55 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 20571990565728506, guid: 01af163dffdfedf43ad9cb2bee8cc1aa,
+    - target: {fileID: 224724952589571908, guid: 01af163dffdfedf43ad9cb2bee8cc1aa,
         type: 2}
-      propertyPath: m_ClearFlags
-      value: 1
+      propertyPath: m_LocalPosition.x
+      value: -439.99994
       objectReference: {fileID: 0}
-    - target: {fileID: 20571990565728506, guid: 01af163dffdfedf43ad9cb2bee8cc1aa,
+    - target: {fileID: 224724952589571908, guid: 01af163dffdfedf43ad9cb2bee8cc1aa,
         type: 2}
-      propertyPath: m_BackGroundColor.r
-      value: 0.010218436
+      propertyPath: m_LocalPosition.y
+      value: -1868.2183
       objectReference: {fileID: 0}
-    - target: {fileID: 20571990565728506, guid: 01af163dffdfedf43ad9cb2bee8cc1aa,
+    - target: {fileID: 224541509338733078, guid: 01af163dffdfedf43ad9cb2bee8cc1aa,
         type: 2}
-      propertyPath: m_BackGroundColor.g
-      value: 0.18639164
+      propertyPath: m_LocalPosition.x
+      value: -149.99994
       objectReference: {fileID: 0}
-    - target: {fileID: 20571990565728506, guid: 01af163dffdfedf43ad9cb2bee8cc1aa,
+    - target: {fileID: 224541509338733078, guid: 01af163dffdfedf43ad9cb2bee8cc1aa,
         type: 2}
-      propertyPath: m_BackGroundColor.b
-      value: 0.46323532
+      propertyPath: m_LocalPosition.y
+      value: -1868.2183
+      objectReference: {fileID: 0}
+    - target: {fileID: 224671961420636598, guid: 01af163dffdfedf43ad9cb2bee8cc1aa,
+        type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 120.00006
+      objectReference: {fileID: 0}
+    - target: {fileID: 224671961420636598, guid: 01af163dffdfedf43ad9cb2bee8cc1aa,
+        type: 2}
+      propertyPath: m_LocalPosition.y
+      value: -1868.2183
+      objectReference: {fileID: 0}
+    - target: {fileID: 224374706411315302, guid: 01af163dffdfedf43ad9cb2bee8cc1aa,
+        type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 440.00006
+      objectReference: {fileID: 0}
+    - target: {fileID: 224374706411315302, guid: 01af163dffdfedf43ad9cb2bee8cc1aa,
+        type: 2}
+      propertyPath: m_LocalPosition.y
+      value: -1868.2183
+      objectReference: {fileID: 0}
+    - target: {fileID: 224591005965672894, guid: 01af163dffdfedf43ad9cb2bee8cc1aa,
+        type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 378.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 224591005965672894, guid: 01af163dffdfedf43ad9cb2bee8cc1aa,
+        type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 195.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 01af163dffdfedf43ad9cb2bee8cc1aa, type: 2}

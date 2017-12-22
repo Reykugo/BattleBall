@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviour
 
     public GameObject avatarPrefab;
 
+    public List<GameObject> PlayersUI;
+
     public TypeOfGame GameType;
     public int GameDuration;
     public int StartingLife;
@@ -33,6 +35,7 @@ public class GameManager : MonoBehaviour
     private AreaConfig areaConfig; //TerrainConfiguration (spawners...)
     private List<PlayerInfo> disconnectedPlayers = new List<PlayerInfo>();
     public PopUp reconnectPopUp;
+
 
     public bool gameStarted;
 
@@ -178,8 +181,9 @@ public class GameManager : MonoBehaviour
     {
         var spawners = areaConfig.spawners;
 
-        foreach (var p in players)
+        for (var i=0; i< players.Count; i++)
         {
+            var p = players[i];
             Transform spawner = spawners[UnityEngine.Random.Range(0, spawners.Count)];
             GameObject avatar = Instantiate(avatarPrefab, spawner.position, Quaternion.identity);
             avatars.Add(avatar);
@@ -199,6 +203,13 @@ public class GameManager : MonoBehaviour
             //Setting up avatar inputs.
             PlayerInputHandler inputHandler = avatar.GetComponent<PlayerInputHandler>();
             inputHandler.InitNet(playerScript.playerConnexion);
+
+            GameObject playerUi = PlayersUI[i];
+            playerUi.SetActive(true);
+            var playerUIScript = playerUi.GetComponent<PlayerUIScript>();
+            playerUIScript.avatar = p;
+            playerUIScript.Init();
+
         }
     }
 

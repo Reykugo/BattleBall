@@ -78,6 +78,8 @@ public class GameManager : MonoBehaviour
             powerByType.Clear();
             gameStarted = true;
             areaConfig = GameObject.Find("Area").GetComponent<AreaConfig>();
+            var go  = GameObject.Find("AreaAAAAAA");
+            areaConfig = go.GetComponent<AreaConfig>();
             if (areaConfig.spawners.Count < players.Count)
                 return;//Error too much players for the spawners
             avatars = new List<GameObject>();
@@ -203,13 +205,6 @@ public class GameManager : MonoBehaviour
             //Setting up avatar inputs.
             PlayerInputHandler inputHandler = avatar.GetComponent<PlayerInputHandler>();
             inputHandler.InitNet(playerScript.playerConnexion);
-
-            GameObject playerUi = PlayersUI[i];
-            playerUi.SetActive(true);
-            var playerUIScript = playerUi.GetComponent<PlayerUIScript>();
-            playerUIScript.avatar = p;
-            playerUIScript.Init();
-
         }
     }
 

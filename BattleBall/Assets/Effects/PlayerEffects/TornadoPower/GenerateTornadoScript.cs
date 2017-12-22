@@ -13,15 +13,12 @@ public class GenerateTornadoScript : Power {
         dashScript.OnDashing += GenerateTornado;
         
     }
-    void OnDestroy()
-    {
-        dashScript.OnDashing -= GenerateTornado;
-    }
 
     void GenerateTornado(Vector3 movement)
     {
         GameObject tornado = Instantiate(TornadoPrefab, player.transform.position, Quaternion.identity);
         tornado.GetComponent<TornadoScript>().Player = player;
+        dashScript.OnDashing -= GenerateTornado;
         Destroy(tornado, TornadoTimeToLive);
         Destroy(gameObject);
     }

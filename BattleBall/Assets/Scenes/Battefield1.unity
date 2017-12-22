@@ -112,7 +112,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &1717854945
+--- !u!1001 &1792670400
 Prefab:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -154,56 +154,12 @@ Prefab:
     - target: {fileID: 224749226872725532, guid: 10b3075c053df414b883f43bc4e5790d,
         type: 2}
       propertyPath: m_LocalPosition.x
-      value: 320
+      value: 456
       objectReference: {fileID: 0}
     - target: {fileID: 224749226872725532, guid: 10b3075c053df414b883f43bc4e5790d,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: 240
-      objectReference: {fileID: 0}
-    - target: {fileID: 224269417775373280, guid: 10b3075c053df414b883f43bc4e5790d,
-        type: 2}
-      propertyPath: m_LocalPosition.x
-      value: -440
-      objectReference: {fileID: 0}
-    - target: {fileID: 224269417775373280, guid: 10b3075c053df414b883f43bc4e5790d,
-        type: 2}
-      propertyPath: m_LocalPosition.y
-      value: -670.8999
-      objectReference: {fileID: 0}
-    - target: {fileID: 224798614241612660, guid: 10b3075c053df414b883f43bc4e5790d,
-        type: 2}
-      propertyPath: m_LocalPosition.x
-      value: -150
-      objectReference: {fileID: 0}
-    - target: {fileID: 224798614241612660, guid: 10b3075c053df414b883f43bc4e5790d,
-        type: 2}
-      propertyPath: m_LocalPosition.y
-      value: -670.8999
-      objectReference: {fileID: 0}
-    - target: {fileID: 224076049123891620, guid: 10b3075c053df414b883f43bc4e5790d,
-        type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 440
-      objectReference: {fileID: 0}
-    - target: {fileID: 224076049123891620, guid: 10b3075c053df414b883f43bc4e5790d,
-        type: 2}
-      propertyPath: m_LocalPosition.y
-      value: -670.90015
-      objectReference: {fileID: 0}
-    - target: {fileID: 224258275213278442, guid: 10b3075c053df414b883f43bc4e5790d,
-        type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 120
-      objectReference: {fileID: 0}
-    - target: {fileID: 224258275213278442, guid: 10b3075c053df414b883f43bc4e5790d,
-        type: 2}
-      propertyPath: m_LocalPosition.y
-      value: -670.90015
-      objectReference: {fileID: 0}
-    - target: {fileID: 1857439427010598, guid: 10b3075c053df414b883f43bc4e5790d, type: 2}
-      propertyPath: m_Name
-      value: BattleField
+      value: 297
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 10b3075c053df414b883f43bc4e5790d, type: 2}

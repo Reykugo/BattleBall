@@ -9,6 +9,8 @@ public class FieldIceScript : MonoBehaviour {
 
     public float iceDuration;
 
+    private Vector3 slipVelocity;
+
 	// Use this for initialization
 	void Start () {
         Destroy(gameObject, iceDuration);
@@ -20,12 +22,21 @@ public class FieldIceScript : MonoBehaviour {
 		
 	}
 
-
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag == "Player" && other.gameObject.name != player.name)
         {
+            slipVelocity = other.GetComponent<Rigidbody>().velocity;
+        }
+    }
+
+
+    private void OnTriggerStay(Collider other)
+    {
+        if(other.tag == "Player" && other.gameObject.name != player.name)
+        {
             other.GetComponent<Collider>().material.dynamicFriction = 0;
+            other.GetComponent<Rigidbody>().velocity = slipVelocity;
         }
     }
 

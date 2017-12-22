@@ -61,9 +61,6 @@ public class GameUI : FlowStep {
     void Start()
     {
         gameStateManager = GetComponentInParent<GameStateManager>();
-        net.OnMessageReceived += ParseServerMessage;
-        net.OnConnect += OnReconnect;
-        net.OnDisconnect += OnDisconnect;
 
         lowPassFilterFactor = accelerometerUpdateInterval / lowPassKernelWidthInSeconds;
         shakeDetectionThreshold *= shakeDetectionThreshold;
@@ -80,8 +77,16 @@ public class GameUI : FlowStep {
         }
     }
 
-    void Disable()
+    void OnEnable()
     {
+        net.OnMessageReceived += ParseServerMessage;
+        net.OnConnect += OnReconnect;
+        net.OnDisconnect += OnDisconnect;
+    }
+
+    void OnDisable()
+    {
+        Debug.Log("Test");
         net.OnConnect -= OnReconnect;
         net.OnDisconnect -= OnDisconnect;
         net.OnMessageReceived -= ParseServerMessage;

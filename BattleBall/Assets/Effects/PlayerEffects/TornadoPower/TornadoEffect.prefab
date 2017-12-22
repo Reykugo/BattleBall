@@ -118,7 +118,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PullSpeed: 125
   Duration: 5
-  Speed: 5
+  Speed: 15
   Player: {fileID: 0}
   finalDestination: {x: 0, y: 0, z: 0}
 --- !u!136 &136653849705996320

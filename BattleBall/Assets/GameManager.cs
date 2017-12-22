@@ -22,8 +22,6 @@ public class GameManager : MonoBehaviour
 
     public GameObject avatarPrefab;
 
-    public List<GameObject> PlayersUI;
-
     public TypeOfGame GameType;
     public int GameDuration;
     public int StartingLife;
@@ -77,7 +75,6 @@ public class GameManager : MonoBehaviour
         {
             powerByType.Clear();
             gameStarted = true;
-            areaConfig = GameObject.Find("Area").GetComponent<AreaConfig>();
             var go  = GameObject.Find("AreaAAAAAA");
             areaConfig = go.GetComponent<AreaConfig>();
             if (areaConfig.spawners.Count < players.Count)

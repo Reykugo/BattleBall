@@ -8,6 +8,23 @@ using UnityEngine.UI;
 
 public class GameUI : FlowStep {
 
+    [Serializable]
+    public class PowerReference
+    {
+        public PowerType power;
+        public Sprite sprite;
+    }
+
+    public enum PowerType { GAZ, METAL, ICE, LIGHTNING, CONFUSION, TORNADO, EXPLOSION, LENGTH };
+    //
+    public PowerReference[] ListOfPower;
+    private Dictionary<PowerType, Sprite> powerByType = new Dictionary<PowerType, Sprite>();
+
+    public Image currentEffectImage;
+    public Text currentEffectText;
+
+
+
     const string START_GAME = "Win";
     const string PLAYER_UPDATE = "Loose";
 
@@ -15,6 +32,8 @@ public class GameUI : FlowStep {
     public event DashObserver OnDash;
     public delegate void shakeObserver(bool isShaking);
     public event DashObserver OnShake;
+
+
 
 
     bool ready = false;
@@ -174,6 +193,11 @@ public class GameUI : FlowStep {
         {
             gameStateManager.StartCoroutine(VibrateFor(seconds: 2f));
         }
+    }
+
+    void ChangeCurrentPower(PowerType powerType)
+    {
+        currentEffectImage.sprite = powerByType[powerType];
     }
 
     IEnumerator VibrateFor(float seconds)

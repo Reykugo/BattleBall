@@ -16,9 +16,13 @@ public class PlayerInfo : MonoBehaviour {
 
     public void SetUp(GameObject avatar)
     {
+        this.avatar = avatar;
         var avatarScript = avatar.GetComponent<AvatarScript>();
+        avatarScript.SetPlayerName(playerName);
         avatarScript.OnAvatarFall += SendAvatarFall;
         avatarScript.OnAvatarDie += SendAvatarDead;
+        var effectManager = avatar.GetComponent<EffectManager>();
+        effectManager.OnPowerAcquired += playerConnexion.SendNewPower;
     }
 
     public void SendAvatarFall(GameObject avatar)
@@ -32,6 +36,8 @@ public class PlayerInfo : MonoBehaviour {
         var avatarScript = avatar.GetComponent<AvatarScript>();
         avatarScript.OnAvatarFall -= SendAvatarFall;
         avatarScript.OnAvatarDie -= SendAvatarDead;
+        var effectManager = avatar.GetComponent<EffectManager>();
+        effectManager.OnPowerAcquired -= playerConnexion.SendNewPower;
     }
 
 }

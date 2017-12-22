@@ -7,6 +7,22 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public class PlayerConnexionScript : MonoBehaviour {
+
+    [Serializable]
+    public class PowerReference
+    {
+        public Power.PowerType power;
+        public GameObject prefab;
+    }
+
+    public PowerReference[] ListOfPower;
+    //
+    private Dictionary<Power.PowerType, GameObject> powerByType = new Dictionary<Power.PowerType, GameObject>();
+
+
+
+
+
     const string ALIVE_COMMAND = "Alive";
     const string PLAYER_UPDATE = "PlayerUpdate";
     //PlayerData represent the player states, score, a lot of things. 
@@ -88,6 +104,11 @@ public class PlayerConnexionScript : MonoBehaviour {
     public void SendAvatarFall()
     {
         Send("AvatarFelt;");
+    }
+
+    public void SendNewPower(Power.PowerType powerType)
+    {
+        Send("NewPower;" + Encoding.ASCII.GetString(BitConverter.GetBytes((int)powerType)) + ";");
     }
 
     private void Send(string message)

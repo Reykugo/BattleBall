@@ -77,6 +77,10 @@ public class GameManager : MonoBehaviour
             gameStarted = true;
             var go  = GameObject.Find("AreaAAAAAA");
             areaConfig = go.GetComponent<AreaConfig>();
+            Debug.Log(go.name);
+            Debug.Log(areaConfig.Item.name);
+
+
             if (areaConfig.spawners.Count < players.Count)
                 return;//Error too much players for the spawners
             avatars = new List<GameObject>();
@@ -180,9 +184,8 @@ public class GameManager : MonoBehaviour
     {
         var spawners = areaConfig.spawners;
 
-        for (var i=0; i< players.Count; i++)
+        foreach (var p in players)
         {
-            var p = players[i];
             Transform spawner = spawners[UnityEngine.Random.Range(0, spawners.Count)];
             GameObject avatar = Instantiate(avatarPrefab, spawner.position, Quaternion.identity);
             avatars.Add(avatar);

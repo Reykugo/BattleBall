@@ -30,7 +30,7 @@ public class AvatarScript : MonoBehaviour
     private ColorUnifier colorUnifier;
 
     private EffectManager effectManager;//StateManager.
-
+    public string PlayerName;
 
     //Stun TODO move.
     private Rigidbody rb;
@@ -53,6 +53,7 @@ public class AvatarScript : MonoBehaviour
     {
         colorUnifier.OnColorChanged += (color) =>
         {
+            AvatarColor = color;
             playerIdentityText.color = color;
             playerMaterial.color = color;
             GetComponent<Light>().color = color;
@@ -106,7 +107,8 @@ public class AvatarScript : MonoBehaviour
 
     public void SetPlayerName(string name)
     {
-        name = "player-" + name;
+        this.name = "player-" + name;
+        PlayerName = name;
         playerIdentityText.text = name;
     }
 

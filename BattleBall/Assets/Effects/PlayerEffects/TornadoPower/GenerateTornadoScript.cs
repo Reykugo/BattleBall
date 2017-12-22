@@ -20,6 +20,9 @@ public class GenerateTornadoScript : Power {
         tornado.GetComponent<TornadoScript>().Player = player;
         dashScript.OnDashing -= GenerateTornado;
         Destroy(tornado, TornadoTimeToLive);
-        Destroy(gameObject);
+        if (gameObject)
+        {
+            Destroy(gameObject);
+        }
     }
 }

@@ -194,8 +194,8 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 270705476}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 436, y: 297, z: 0}
-  m_LocalScale: {x: 0.45416668, y: 0.45416668, z: 0.45416668}
+  m_LocalPosition: {x: 497.5, y: 230, z: 0}
+  m_LocalScale: {x: 0.5182292, y: 0.5182292, z: 0.5182292}
   m_Children:
   - {fileID: 672492257}
   - {fileID: 766039187}
@@ -335,7 +335,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -380,7 +380,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 743224513}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 653.94495, z: 0}
+  m_LocalPosition: {x: 0, y: 443.8191, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 270705480}
@@ -423,7 +423,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: PLAYER 1 WIN
+  m_Text: 
 --- !u!222 &743224516
 CanvasRenderer:
   m_ObjectHideFlags: 0

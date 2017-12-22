@@ -18,8 +18,7 @@ public class TornadoScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         playerMove = Player.GetComponent<MovingScript>();
-        finalDestination = this.transform.position + (playerMove.currentDirection * (Duration * Speed));
-        
+        finalDestination = this.transform.position + (playerMove.currentDirection * (Duration * Speed));//We can do much better.
 	}
 	
     void OnTriggerStay(Collider other)

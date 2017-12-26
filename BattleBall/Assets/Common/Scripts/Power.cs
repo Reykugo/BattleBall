@@ -32,6 +32,11 @@ public abstract class Power : MonoBehaviour{
         
     }
 
+    void OnDestroy()
+    {
+        StopCoroutine("PowerDuration");
+    }
+
     public void StartEffect()//TODO handle more cases.
     {
         Debug.Log("EFFECT STARTED before was :" + activated);
